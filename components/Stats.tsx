@@ -172,7 +172,7 @@ export function Stats() {
                     <CountUp
                       to={value}
                       suffix={suffix}
-                      triggered={isInView && userStatus !== "loading"}
+                      triggered={isInView && userStatus === "success"}
                     />
                   </p>
 
