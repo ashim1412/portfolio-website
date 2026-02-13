@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Theme variables – space-separated RGB for Tailwind opacity support ── */
+:root,
+html.dark {
+  --background: 10 10 26;       /* #0a0a1a – matches hero dark base */
+  --secondary: 15 12 36;        /* #0f0c24 – deep purple-navy */
+  --card: 14 14 34;             /* #0e0e22 – card surface */
+  --accent: 59 130 246;         /* #3b82f6 */
+  --accent-hover: 37 99 235;    /* #2563eb */
+  --foreground: 229 229 229;    /* #e5e5e5 */
+  --muted: 107 114 128;         /* #6b7280 */
+  --border: 40 38 72;           /* #282848 – blue-tinted border */
+}
+
+/* ── Light theme overrides ─────────────────────────────────────────────── */
+html.light {
+  --background: 240 249 255;    /* #f0f9ff – matches hero light base */
+  --secondary: 255 255 255;     /* #ffffff */
+  --card: 235 244 255;          /* #ebf4ff – soft blue card */
+  --accent: 59 130 246;
+  --accent-hover: 37 99 235;
+  --foreground: 15 23 42;       /* #0f172a */
+  --muted: 100 116 139;         /* #64748b */
+  --border: 186 230 253;        /* #bae6fd – light blue border */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  ::selection {
+    @apply bg-accent/30 text-foreground;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-accent to-blue-400 bg-clip-text text-transparent;
+  }
+
+  .animate-gradient-shift {
+    background-size: 300% 300%;
+    animation: gradientShift 12s ease infinite;
+  }
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50%       { opacity: 0.9;  transform: scale(1.4); }
+}
