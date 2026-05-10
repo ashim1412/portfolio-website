@@ -1,5 +1,5 @@
 export function getYearsOfExperience(): string {
-  const analyticsStartDate = new Date("2019-03-01");
+  const analyticsStartDate = new Date("2017-01-01");
   const today = new Date();
 
   const years = today.getFullYear() - analyticsStartDate.getFullYear();

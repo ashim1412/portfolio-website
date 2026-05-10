@@ -1,7 +1,7 @@
 export const personalInfo = {
   name: "Ashim Shrestha",
-  title: "Data Analyst & Analytics Engineer",
-  bio: "Senior BI & Analytics professional with 5+ years of experience in fintech, e-commerce, and marketing analytics. Specializing in dashboards, forecasting, and data-driven solutions.",
+  title: "Data Analyst & Growth Analytics",
+  bio: "Analytics professional with 8+ years driving customer acquisition, retention, and revenue growth across fintech and e-commerce. Specializing in growth analytics, customer segmentation, experimentation, and marketing performance.",
   email: "hello@ashim-shrestha.com",
   github: "https://github.com/ashim1412",
   linkedin: "https://linkedin.com/in/ashim-shrestha",

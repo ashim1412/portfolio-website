@@ -4,7 +4,13 @@ import { motion } from "framer-motion";
 import { ArrowDown, Github, Download } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState, useMemo } from "react";
-import { getYearsOfExperience } from "@/lib/experience";
+
+const metrics = [
+  { value: "50%", label: "Churn reduction" },
+  { value: "20%", label: "New customer acquisition growth" },
+  { value: "18%", label: "Conversion rate lift" },
+  { value: "12%", label: "CAC reduction" },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -64,7 +70,6 @@ export function Hero() {
   useEffect(() => setMounted(true), []);
 
   const isDark = !mounted || theme !== "light";
-  const yearsExp = getYearsOfExperience();
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
@@ -144,7 +149,7 @@ export function Hero() {
           className="text-2xl sm:text-3xl font-light mb-5 tracking-wide"
           style={{ color: isDark ? "rgba(147,197,253,0.85)" : "#3b82f6" }}
         >
-          Data Analyst / Analytics Engineer
+          Data Analyst &amp; Growth Analytics Professional
         </motion.p>
 
         {/* Tagline */}
@@ -156,7 +161,9 @@ export function Hero() {
           className="text-lg max-w-xl mx-auto leading-relaxed mb-12"
           style={{ color: isDark ? "rgba(255,255,255,0.50)" : "rgba(15,23,42,0.60)" }}
         >
-          Transforming complex data into strategic insights | {yearsExp} years in fintech, e-commerce &amp; analytics
+          I help businesses grow by turning customer data into acquisition strategies,
+          retention improvements, and revenue-driving decisions — across fintech,
+          e-commerce, and marketing.
         </motion.p>
 
         {/* CTA Buttons */}
@@ -200,6 +207,37 @@ export function Hero() {
             <Download size={16} />
             Download Resume
           </a>
+        </motion.div>
+
+        {/* Impact metrics */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          custom={1.0}
+          className="flex justify-center"
+        >
+          <div
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10 pt-8 w-full max-w-2xl"
+            style={{ borderTop: isDark ? "1px solid rgba(255,255,255,0.15)" : "1px solid rgba(15,23,42,0.15)" }}
+          >
+            {metrics.map((m) => (
+              <div key={m.label} className="text-center">
+                <div
+                  className="text-2xl font-semibold"
+                  style={{ color: isDark ? "#ffffff" : "#0f172a" }}
+                >
+                  {m.value}
+                </div>
+                <div
+                  className="text-xs mt-1"
+                  style={{ color: isDark ? "rgba(255,255,255,0.50)" : "rgba(15,23,42,0.60)" }}
+                >
+                  {m.label}
+                </div>
+              </div>
+            ))}
+          </div>
         </motion.div>
       </div>
 

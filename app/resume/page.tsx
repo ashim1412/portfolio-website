@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { Download, MapPin, Mail, Globe, Phone, Github, Linkedin } from "lucide-react";
-import { getYearsOfExperience } from "@/lib/experience";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -84,24 +83,29 @@ const experience = [
 
 const skills = [
   {
-    category: "Technical",
+    category: "Growth & Marketing Analytics",
     items:
-      "Python (Pandas, NumPy, Scikit-learn), SQL (Advanced: CTEs, window functions, optimisation), dbt, Git/GitHub, PySpark, DuckDB, Jupyter, Zapier, Airflow for data orchestration",
+      "Customer segmentation, cohort analysis, A/B testing & experimentation, funnel analysis, retention modeling, LTV / CAC, lifecycle analytics, RFM analysis, marketing performance, CRM analytics",
   },
   {
-    category: "Data & Analytics",
+    category: "Data Analysis & Modeling",
     items:
-      "Databricks, BigQuery, Looker, Power BI, Tableau, Microsoft Fabric, Metabase, Google Analytics 4, ETL, data modelling (star schema, dimensional design)",
+      "SQL (CTEs, window functions, optimisation), Python (Pandas, NumPy, Scikit-learn), time series forecasting, regression, churn prediction, credit risk scoring, feature engineering",
   },
   {
-    category: "Machine Learning & Experimentation",
+    category: "BI & Visualization",
     items:
-      "Time series forecasting, Regression, A/B testing, hypothesis testing, segmentation, clustering, feature engineering, churn prediction, credit risk scoring",
+      "Tableau, Power BI, Looker, Metabase, Looker Studio, Google Analytics 4, Google Tag Manager",
   },
   {
     category: "Domain Expertise",
     items:
-      "Fintech & credit risk (default prediction, borrower behaviour), E-Commerce (GMV, LTV/CAC, conversion funnels, retention), dashboard design, KPI tracking, cross-functional leadership",
+      "Fintech & credit risk, e-commerce & marketplace analytics, marketing analytics, CRM & lifecycle, KPI strategy & dashboard design, cross-functional leadership",
+  },
+  {
+    category: "Data Infrastructure",
+    items:
+      "dbt, Snowflake, BigQuery, Apache Airflow, DuckDB, PySpark, Git / GitHub Actions, SSIS",
   },
 ];
 
@@ -129,7 +133,7 @@ export default function ResumePage() {
           <div>
             <h1 className="text-4xl font-bold text-foreground tracking-tight">Ashim Shrestha</h1>
             <p className="text-accent font-medium mt-1 text-base">
-              Senior BI &amp; Analytics Analyst
+              Senior Analytics Professional | Growth, Retention &amp; Customer Insights
             </p>
           </div>
           <a
@@ -173,9 +177,12 @@ export default function ResumePage() {
         <motion.section variants={fadeUp} initial="hidden" animate="visible" custom={0.08} className="mb-8">
           <SectionHeading title="Summary" />
           <p className="text-foreground/80 leading-relaxed text-sm">
-            Senior BI &amp; Analytics Analyst with {getYearsOfExperience()} years across fintech, e-commerce, and marketing.
-            Design end-to-end analytics solutions: dashboards, forecasting, experimentation, and deployed
-            data products. Lead teams and mentor analysts. Comfortable working remotely with international teams.
+            Analytics professional with 8+ years driving customer acquisition, retention,
+            and revenue growth across fintech and e-commerce. Specialise in segmentation,
+            experimentation, lifecycle analytics, and marketing performance — with a track
+            record of measurable growth impact across high-scale marketplaces and fintech
+            products. Currently leading a team of 3 analysts and working with distributed
+            international teams.
           </p>
         </motion.section>
 

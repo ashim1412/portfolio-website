@@ -4,7 +4,6 @@ import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useTheme } from "next-themes";
-import { getYearsOfExperience } from "@/lib/experience";
 
 const sectionVariants = {
   hidden:  { opacity: 0, y: 40 },
@@ -16,7 +15,6 @@ export function About() {
   const isInView   = useInView(sectionRef, { once: true, margin: "-80px" });
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
-  const yearsExp = getYearsOfExperience();
 
   return (
     <section
@@ -89,29 +87,26 @@ export function About() {
           {/* ── Right: bio ── */}
           <div className="space-y-4 text-foreground/80 leading-relaxed text-base">
             <p>
-              I&apos;m a Senior BI &amp; Analytics professional with {yearsExp} years of
-              experience turning data into actionable business insights.
-              Currently leading analytics consulting projects at Extensodata
-              (F1Soft International), I specialize in designing end-to-end
-              analytics solutions—from dashboards and forecasting models to
-              deployed data products that drive real business impact.
+              I&apos;m a growth and customer analytics professional with 8+ years of experience
+              helping businesses understand their customers, improve retention, and make
+              smarter acquisition decisions.
             </p>
             <p>
-              My journey spans fintech, e-commerce, and marketing analytics,
-              where I&apos;ve built everything from customer segmentation systems
-              that reduced churn by 50% to time series forecasting models
-              achieving 30% higher accuracy. At Daraz, I owned 15+ core
-              dashboards used by 50+ stakeholders, and developed a
-              micro-loan eligibility system that drove 20% growth in customer
-              acquisition.
+              Across fintech, e-commerce, and marketing, I&apos;ve built the analytics that power
+              growth — from customer segmentation models that reduced churn by 50% to
+              experimentation frameworks that lifted conversion rates by 18% and cut customer
+              acquisition costs by 12%. At Daraz, I led analytics for a marketplace platform
+              serving 50+ stakeholders. At Extensodata, I built a micro-loan eligibility
+              scoring system that drove 20% growth in new customer acquisition.
             </p>
             <p>
-              I thrive on solving complex business problems through
-              hypothesis-driven analysis, A/B testing, and machine learning.
-              Whether it&apos;s optimizing marketing campaigns, predicting credit
-              risk, or building predictive models, I believe the best
-              analytics solutions are those that are both technically sound
-              and immediately actionable for business teams.
+              I currently lead a team of 3 analysts, translating complex business questions
+              into actionable insights for product, marketing, and credit teams.
+            </p>
+            <p>
+              My work sits at the intersection of data rigor and business strategy — I&apos;m
+              equally comfortable running a cohort retention analysis, designing an A/B test,
+              or presenting findings to senior leadership.
             </p>
           </div>
         </motion.div>
