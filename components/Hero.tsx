@@ -5,13 +5,6 @@ import { ArrowDown, Github, Download } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState, useMemo } from "react";
 
-const metrics = [
-  { value: "50%", label: "Churn reduction" },
-  { value: "20%", label: "New customer acquisition growth" },
-  { value: "18%", label: "Conversion rate lift" },
-  { value: "12%", label: "CAC reduction" },
-];
-
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
   visible: (delay: number) => ({
@@ -78,7 +71,7 @@ export function Hero() {
         className="absolute inset-0 animate-gradient-shift transition-all duration-700"
         style={{
           backgroundImage: isDark
-            ? "linear-gradient(135deg, #0a0a1a 0%, #0f0728 30%, #0a1628 60%, #050a12 100%)"
+            ? "linear-gradient(135deg, #0a1318 0%, #0f1923 30%, #0d2420 60%, #0f1923 100%)"
             : "linear-gradient(135deg, #dbeafe 0%, #ede9fe 40%, #e0f2fe 70%, #f0f9ff 100%)",
         }}
       />
@@ -88,7 +81,7 @@ export function Hero() {
         className="absolute inset-0"
         style={{
           background: isDark
-            ? "radial-gradient(ellipse at 50% 50%, rgba(59,130,246,0.08) 0%, transparent 70%)"
+            ? "radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.08) 0%, transparent 70%)"
             : "radial-gradient(ellipse at 50% 50%, rgba(99,102,241,0.06) 0%, transparent 70%)",
         }}
       />
@@ -105,7 +98,7 @@ export function Hero() {
           left: "10%",
           top: "15%",
           background: isDark
-            ? "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)"
+            ? "radial-gradient(circle, rgba(0,212,170,0.06) 0%, transparent 70%)"
             : "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)",
         }}
         animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
@@ -119,7 +112,7 @@ export function Hero() {
           right: "8%",
           bottom: "20%",
           background: isDark
-            ? "radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)"
+            ? "radial-gradient(circle, rgba(0,184,150,0.06) 0%, transparent 70%)"
             : "radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%)",
         }}
         animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.7, 0.4] }}
@@ -147,7 +140,7 @@ export function Hero() {
           animate="visible"
           custom={0.4}
           className="text-2xl sm:text-3xl font-light mb-5 tracking-wide"
-          style={{ color: isDark ? "rgba(147,197,253,0.85)" : "#3b82f6" }}
+          style={{ color: isDark ? "#00d4aa" : "#0d9488" }}
         >
           Data Analyst &amp; Growth Analytics Professional
         </motion.p>
@@ -162,7 +155,7 @@ export function Hero() {
           style={{ color: isDark ? "rgba(255,255,255,0.50)" : "rgba(15,23,42,0.60)" }}
         >
           I help businesses grow by turning customer data into acquisition strategies,
-          retention improvements, and revenue-driving decisions — across fintech,
+          retention improvements, and revenue-driving decisions across fintech,
           e-commerce, and marketing.
         </motion.p>
 
@@ -176,7 +169,7 @@ export function Hero() {
         >
           <a
             href="#projects"
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-blue-500 hover:bg-blue-400 text-white font-semibold text-sm tracking-wide transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/30"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-accent hover:bg-accent-hover text-white font-semibold text-sm tracking-wide transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-[rgba(0,212,170,0.3)]"
           >
             View Projects
           </a>
@@ -207,37 +200,6 @@ export function Hero() {
             <Download size={16} />
             Download Resume
           </a>
-        </motion.div>
-
-        {/* Impact metrics */}
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={1.0}
-          className="flex justify-center"
-        >
-          <div
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10 pt-8 w-full max-w-2xl"
-            style={{ borderTop: isDark ? "1px solid rgba(255,255,255,0.15)" : "1px solid rgba(15,23,42,0.15)" }}
-          >
-            {metrics.map((m) => (
-              <div key={m.label} className="text-center">
-                <div
-                  className="text-2xl font-semibold"
-                  style={{ color: isDark ? "#ffffff" : "#0f172a" }}
-                >
-                  {m.value}
-                </div>
-                <div
-                  className="text-xs mt-1"
-                  style={{ color: isDark ? "rgba(255,255,255,0.50)" : "rgba(15,23,42,0.60)" }}
-                >
-                  {m.label}
-                </div>
-              </div>
-            ))}
-          </div>
         </motion.div>
       </div>
 

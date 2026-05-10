@@ -179,7 +179,7 @@ export default function ResumePage() {
           <p className="text-foreground/80 leading-relaxed text-sm">
             Analytics professional with 8+ years driving customer acquisition, retention,
             and revenue growth across fintech and e-commerce. Specialise in segmentation,
-            experimentation, lifecycle analytics, and marketing performance — with a track
+            experimentation, lifecycle analytics, and marketing performance, with a track
             record of measurable growth impact across high-scale marketplaces and fintech
             products. Currently leading a team of 3 analysts and working with distributed
             international teams.

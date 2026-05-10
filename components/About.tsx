@@ -93,18 +93,17 @@ export function About() {
             </p>
             <p>
               Across fintech, e-commerce, and marketing, I&apos;ve built the analytics that power
-              growth — from customer segmentation models that reduced churn by 50% to
+              growth. From customer segmentation models that reduced churn by 50% to
               experimentation frameworks that lifted conversion rates by 18% and cut customer
               acquisition costs by 12%. At Daraz, I led analytics for a marketplace platform
-              serving 50+ stakeholders. At Extensodata, I built a micro-loan eligibility
-              scoring system that drove 20% growth in new customer acquisition.
+              serving 50+ stakeholders.
             </p>
             <p>
-              I currently lead a team of 3 analysts, translating complex business questions
-              into actionable insights for product, marketing, and credit teams.
+              I currently lead projects translating complex business questions into actionable
+              insights for product, marketing, and credit teams.
             </p>
             <p>
-              My work sits at the intersection of data rigor and business strategy — I&apos;m
+              My work sits at the intersection of data rigor and business strategy. I&apos;m
               equally comfortable running a cohort retention analysis, designing an A/B test,
               or presenting findings to senior leadership.
             </p>

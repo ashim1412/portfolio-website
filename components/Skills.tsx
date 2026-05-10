@@ -87,23 +87,11 @@ const skillGroups = [
   },
 ];
 
-// ── Color maps ─────────────────────────────────────────────────────────────────
-const pillColors: Record<string, string> = {
-  blue:    "bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20 hover:border-blue-400/50",
-  purple:  "bg-purple-500/10 text-purple-400 border-purple-500/20 hover:bg-purple-500/20 hover:border-purple-400/50",
-  cyan:    "bg-cyan-500/10 text-cyan-400 border-cyan-500/20 hover:bg-cyan-500/20 hover:border-cyan-400/50",
-  emerald: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-400/50",
-  orange:  "bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20 hover:border-orange-400/50",
-  yellow:  "bg-yellow-500/10 text-yellow-400 border-yellow-500/20 hover:bg-yellow-500/20 hover:border-yellow-400/50",
-  indigo:  "bg-indigo-500/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-500/20 hover:border-indigo-400/50",
-  pink:    "bg-pink-500/10 text-pink-400 border-pink-500/20 hover:bg-pink-500/20 hover:border-pink-400/50",
-};
-
-const headingColors: Record<string, string> = {
-  blue: "text-blue-400",   purple: "text-purple-400", cyan: "text-cyan-400",
-  emerald: "text-emerald-400", orange: "text-orange-400", yellow: "text-yellow-400",
-  indigo: "text-indigo-400", pink: "text-pink-400",
-};
+// ── Unified pill + heading styles (emerald teal theme) ───────────────────────
+const PILL_CLASS =
+  "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/50 " +
+  "dark:bg-[#0d2420] dark:text-[#6ee7d4] dark:border-[#00d4aa]/30 dark:hover:border-[#00d4aa]/70 dark:hover:text-[#00d4aa]";
+const HEADING_CLASS = "text-emerald-600 dark:text-[#00d4aa]";
 
 export function Skills() {
   const sectionRef = useRef(null);
@@ -143,21 +131,22 @@ export function Skills() {
         </motion.div>
 
         {/* Skill groups grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {skillGroups.map((group, gi) => {
             const HeadingIcon = group.icon;
+            const isLast = gi === skillGroups.length - 1;
             return (
               <motion.div
                 key={group.heading}
                 initial={{ opacity: 0, y: 24 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: gi * 0.07 }}
-                className="rounded-2xl border border-border bg-secondary p-6"
+                className={`rounded-2xl border border-border bg-secondary p-6${isLast ? " sm:col-span-2 lg:col-span-2" : ""}`}
               >
                 {/* Group heading */}
                 <div className="flex items-center gap-2 mb-5">
-                  <HeadingIcon size={15} className={headingColors[group.color]} />
-                  <p className={`text-xs font-bold uppercase tracking-widest ${headingColors[group.color]}`}>
+                  <HeadingIcon size={15} className={HEADING_CLASS} />
+                  <p className={`text-xs font-bold uppercase tracking-widest ${HEADING_CLASS}`}>
                     {group.heading}
                   </p>
                 </div>
@@ -169,7 +158,7 @@ export function Skills() {
                     return (
                       <span
                         key={skill.label}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 cursor-default hover:scale-105 ${pillColors[group.color]}`}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 cursor-default hover:scale-105 ${PILL_CLASS}`}
                       >
                         <Icon size={11} />
                         {skill.label}

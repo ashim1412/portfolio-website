@@ -5,14 +5,14 @@
 /* ── Theme variables – space-separated RGB for Tailwind opacity support ── */
 :root,
 html.dark {
-  --background: 10 10 26;       /* #0a0a1a – matches hero dark base */
-  --secondary: 15 12 36;        /* #0f0c24 – deep purple-navy */
-  --card: 14 14 34;             /* #0e0e22 – card surface */
-  --accent: 59 130 246;         /* #3b82f6 */
-  --accent-hover: 37 99 235;    /* #2563eb */
+  --background: 15 25 35;       /* #0f1923 – dark slate base */
+  --secondary: 22 32 40;        /* #162028 – surface */
+  --card: 22 32 40;             /* #162028 – card surface */
+  --accent: 0 212 170;          /* #00d4aa – emerald teal */
+  --accent-hover: 0 184 150;    /* #00b896 – emerald teal hover */
   --foreground: 229 229 229;    /* #e5e5e5 */
   --muted: 107 114 128;         /* #6b7280 */
-  --border: 40 38 72;           /* #282848 – blue-tinted border */
+  --border: 26 42 52;           /* #1a2a34 – slate border */
 }
 
 /* ── Light theme overrides ─────────────────────────────────────────────── */
@@ -68,7 +68,7 @@ html.light {
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-accent to-blue-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-[#00d4aa] to-[#6ee7d4] bg-clip-text text-transparent;
   }
 
   .animate-gradient-shift {
