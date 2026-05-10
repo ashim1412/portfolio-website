@@ -376,8 +376,7 @@ export function Contact() {
             Let&apos;s Connect
           </h2>
           <p className="text-lg text-muted max-w-xl mx-auto">
-            Looking for a data analyst to turn complex data into clear insights?
-            Let&apos;s talk!
+            Want to improve acquisition, retention, or marketing performance with better data? Let&apos;s talk.
           </p>
         </motion.div>
 
