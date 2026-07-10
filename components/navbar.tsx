@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -44,13 +45,15 @@ export function Navbar() {
             className="flex items-center gap-2 hover:opacity-85 transition-opacity"
           >
             {mounted && (
-              <Image
-                src={theme === "light" ? "/logo-light.png" : "/logo-dark.png"}
-                alt="Ashim Shrestha logo"
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
+              <motion.div whileHover={{ rotate: 12, scale: 1.1 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
+                <Image
+                  src={theme === "light" ? "/logo-light.png" : "/logo-dark.png"}
+                  alt="Ashim Shrestha logo"
+                  width={32}
+                  height={32}
+                  className="rounded-full"
+                />
+              </motion.div>
             )}
             <span className="text-lg font-bold gradient-text">
               {personalInfo.name.split(" ")[0]}
@@ -74,12 +77,15 @@ export function Navbar() {
 
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
-            <a
+            <motion.a
               href="#send-message"
-              className="inline-flex items-center px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium transition-colors duration-200"
+              whileHover={{ scale: 1.08, rotate: -2 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 12 }}
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white text-sm font-medium"
             >
               Hire Me
-            </a>
+            </motion.a>
           </div>
 
           {/* Mobile controls */}

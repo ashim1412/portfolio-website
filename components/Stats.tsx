@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView, animate } from "framer-motion";
+import { useTheme } from "next-themes";
 import { Folder, Star, GitCommit } from "lucide-react";
 import {
   fetchUserStats,
@@ -58,13 +59,20 @@ function CountUp({
   );
 }
 
+// ── Per-stat-card accent colors — keeps this section in step with Skills ────────
+const STAT_COLORS = [
+  { icon: "bg-emerald-500/15 border-emerald-500/25 text-emerald-400", number: "text-emerald-400", glow: "hover:shadow-[0_8px_30px_rgba(16,185,129,0.18)] hover:border-emerald-500/40" },
+  { icon: "bg-amber-500/15 border-amber-500/25 text-amber-400", number: "text-amber-400", glow: "hover:shadow-[0_8px_30px_rgba(245,158,11,0.18)] hover:border-amber-500/40" },
+  { icon: "bg-purple-500/15 border-purple-500/25 text-purple-400", number: "text-purple-400", glow: "hover:shadow-[0_8px_30px_rgba(168,85,247,0.18)] hover:border-purple-500/40" },
+];
+
 // ── Skeleton pieces ────────────────────────────────────────────────────────────
 function StatCardSkeleton() {
   return (
-    <div className="animate-pulse rounded-xl border border-white/8 bg-[#1a1a1a] p-8 flex flex-col items-center gap-4">
-      <div className="w-12 h-12 rounded-full bg-white/10" />
-      <div className="h-10 w-24 rounded bg-white/10" />
-      <div className="h-4 w-32 rounded bg-white/8" />
+    <div className="animate-pulse rounded-xl border border-border bg-secondary p-8 flex flex-col items-center gap-4">
+      <div className="w-12 h-12 rounded-full bg-border" />
+      <div className="h-10 w-24 rounded bg-border" />
+      <div className="h-4 w-32 rounded bg-border/70" />
     </div>
   );
 }
@@ -74,11 +82,11 @@ function LangBarSkeleton() {
     <div className="animate-pulse space-y-4">
       {[80, 55, 40, 25, 15].map((w, i) => (
         <div key={i} className="flex items-center gap-4">
-          <div className="w-24 h-4 rounded bg-white/10" />
-          <div className="flex-1 h-3 rounded-full bg-white/8">
-            <div className={`h-full rounded-full bg-white/10`} style={{ width: `${w}%` }} />
+          <div className="w-24 h-4 rounded bg-border" />
+          <div className="flex-1 h-3 rounded-full bg-border/70">
+            <div className={`h-full rounded-full bg-border`} style={{ width: `${w}%` }} />
           </div>
-          <div className="w-10 h-4 rounded bg-white/10" />
+          <div className="w-10 h-4 rounded bg-border" />
         </div>
       ))}
     </div>
@@ -96,6 +104,8 @@ export function Stats() {
   const barsRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
   const barsInView = useInView(barsRef, { once: true, margin: "-60px" });
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme !== "light";
 
   useEffect(() => {
     fetchUserStats(GITHUB_USERNAME)
@@ -136,55 +146,68 @@ export function Stats() {
     <section
       id="stats"
       ref={sectionRef}
-      className="py-20 px-6 bg-background"
+      className="relative py-20 px-6 overflow-hidden"
+      style={{
+        background: isDark
+          ? "linear-gradient(135deg, #0a0a1a 0%, #0d1a28 40%, #1a0a28 70%, #0a0a1a 100%)"
+          : "linear-gradient(135deg, #f0f9ff 0%, #ede9fe 40%, #dbeafe 70%, #e0f2fe 100%)",
+      }}
     >
-      <div className="max-w-7xl mx-auto">
+      {/* Ambient orbs — brighter than the rest of the site's low-key glows */}
+      <div className="absolute pointer-events-none" style={{ top: "-40px", left: "8%", width: 320, height: 320, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(16,185,129,0.14) 0%, transparent 70%)" : "radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%)" }} />
+      <div className="absolute pointer-events-none" style={{ bottom: "-30px", right: "6%", width: 340, height: 340, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(168,85,247,0.13) 0%, transparent 70%)" : "radial-gradient(circle, rgba(168,85,247,0.10) 0%, transparent 70%)" }} />
+
+      <div className="relative z-10 max-w-7xl mx-auto">
 
         {/* ── Header ── */}
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-4xl font-bold text-white text-center mb-16"
+          className="text-4xl font-bold text-foreground text-center mb-16"
         >
-          By The Numbers
+          <span className="squiggle-underline font-display">By The Numbers</span>
         </motion.h2>
 
         {/* ── Stat cards ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
           {userStatus === "loading"
             ? [0, 1, 2].map((i) => <StatCardSkeleton key={i} />)
-            : statCards.map(({ icon: Icon, value, label, suffix }, i) => (
-                <motion.div
-                  key={label}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.6, delay: i * 0.15 }}
-                  className="group flex flex-col items-center text-center rounded-xl border border-white/8 bg-[#1a1a1a] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/30 hover:shadow-[0_8px_30px_rgba(59,130,246,0.12)] backdrop-blur-sm"
-                >
-                  {/* Icon */}
-                  <div className="w-12 h-12 rounded-full bg-blue-500/15 border border-blue-500/20 flex items-center justify-center mb-5 group-hover:bg-blue-500/25 transition-colors">
-                    <Icon size={22} className="text-blue-400" />
-                  </div>
+            : statCards.map(({ icon: Icon, value, label, suffix }, i) => {
+                const colors = STAT_COLORS[i % STAT_COLORS.length];
+                return (
+                  <motion.div
+                    key={label}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.6, delay: i * 0.15 }}
+                    whileHover={{ y: -6 }}
+                    className={`group flex flex-col items-center text-center rounded-xl border border-border bg-secondary p-8 transition-all duration-300 backdrop-blur-sm ${colors.glow}`}
+                  >
+                    {/* Icon */}
+                    <div className={`w-12 h-12 rounded-full border flex items-center justify-center mb-5 transition-colors ${colors.icon}`}>
+                      <Icon size={22} />
+                    </div>
 
-                  {/* Animated number */}
-                  <p className="text-5xl font-bold text-blue-400 mb-2 tabular-nums">
-                    <CountUp
-                      to={value}
-                      suffix={suffix}
-                      triggered={isInView && userStatus === "success"}
-                    />
-                  </p>
+                    {/* Animated number */}
+                    <p className={`text-5xl font-bold mb-2 tabular-nums ${colors.number}`}>
+                      <CountUp
+                        to={value}
+                        suffix={suffix}
+                        triggered={isInView && userStatus === "success"}
+                      />
+                    </p>
 
-                  {/* Label */}
-                  <p className="text-gray-400 text-sm font-medium">{label}</p>
+                    {/* Label */}
+                    <p className="text-muted text-sm font-medium">{label}</p>
 
-                  {/* Error note */}
-                  {userStatus === "error" && (
-                    <p className="text-xs text-gray-600 mt-2">(estimated)</p>
-                  )}
-                </motion.div>
-              ))}
+                    {/* Error note */}
+                    {userStatus === "error" && (
+                      <p className="text-xs text-muted/70 mt-2">(estimated)</p>
+                    )}
+                  </motion.div>
+                );
+              })}
         </div>
 
         {/* ── Language section ── */}
@@ -193,14 +216,14 @@ export function Stats() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <h3 className="text-3xl font-bold text-white text-center mb-10">
+          <h3 className="text-3xl font-bold text-foreground text-center mb-10">
             Most Used Languages
           </h3>
 
           {langStatus === "loading" && <LangBarSkeleton />}
 
           {langStatus === "error" && (
-            <p className="text-center text-gray-500 text-sm">
+            <p className="text-center text-muted text-sm">
               Language stats unavailable.
             </p>
           )}
@@ -222,16 +245,16 @@ export function Stats() {
                       {/* Label */}
                       <div className="w-28 flex items-center gap-2 shrink-0">
                         <span className="text-base leading-none">{emoji}</span>
-                        <span className="text-sm text-gray-300 font-medium truncate">
+                        <span className="text-sm text-foreground/80 font-medium truncate">
                           {language}
                         </span>
                       </div>
 
                       {/* Bar track */}
-                      <div className="flex-1 h-3 rounded-full bg-white/8 overflow-hidden">
+                      <div className="flex-1 h-3 rounded-full bg-border overflow-hidden">
                         <motion.div
                           className="h-full rounded-full"
-                          style={{ backgroundColor: color }}
+                          style={{ backgroundColor: color, boxShadow: `0 0 12px ${color}66` }}
                           initial={{ width: "0%" }}
                           animate={
                             barsInView ? { width: `${percentage}%` } : {}
@@ -245,7 +268,7 @@ export function Stats() {
                       </div>
 
                       {/* Percentage */}
-                      <span className="w-10 text-right text-sm text-gray-400 tabular-nums">
+                      <span className="w-10 text-right text-sm text-muted tabular-nums">
                         {percentage}%
                       </span>
                     </motion.div>
@@ -268,7 +291,8 @@ export function Stats() {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={barsInView ? { opacity: 1, scale: 1 } : {}}
                       transition={{ duration: 0.4, delay: 0.6 + i * 0.08 }}
-                      className="group flex flex-col items-center rounded-xl border border-white/8 bg-[#1a1a1a] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/30 hover:shadow-[0_4px_20px_rgba(59,130,246,0.1)]"
+                      whileHover={{ y: -4, boxShadow: `0 4px 20px ${color}33` }}
+                      className="group flex flex-col items-center rounded-xl border border-border bg-secondary p-5 transition-all duration-300"
                     >
                       {/* Circular progress */}
                       <div className="relative mb-3">
@@ -276,7 +300,7 @@ export function Stats() {
                           <circle
                             cx="28" cy="28" r={r}
                             fill="none"
-                            stroke="rgba(255,255,255,0.08)"
+                            stroke="rgb(var(--border))"
                             strokeWidth="4"
                           />
                           <motion.circle
@@ -305,10 +329,10 @@ export function Stats() {
                         </span>
                       </div>
 
-                      <p className="text-sm font-semibold text-white mb-0.5">
+                      <p className="text-sm font-semibold text-foreground mb-0.5">
                         {language}
                       </p>
-                      <p className="text-xs text-gray-500 tabular-nums">
+                      <p className="text-xs text-muted tabular-nums">
                         {percentage}%
                       </p>
                     </motion.div>

@@ -87,11 +87,29 @@ const skillGroups = [
   },
 ];
 
-// ── Unified pill + heading styles (emerald teal theme) ───────────────────────
-const PILL_CLASS =
-  "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/50 " +
-  "dark:bg-[#0d2420] dark:text-[#6ee7d4] dark:border-[#00d4aa]/30 dark:hover:border-[#00d4aa]/70 dark:hover:text-[#00d4aa]";
-const HEADING_CLASS = "text-emerald-600 dark:text-[#00d4aa]";
+// ── Per-group color styles — each skill group gets its own playful accent ────
+const COLOR_STYLES: Record<string, { pill: string; heading: string }> = {
+  emerald: {
+    pill: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/50 dark:bg-emerald-400/10 dark:text-emerald-300 dark:border-emerald-400/30 dark:hover:border-emerald-400/70 dark:hover:text-emerald-200",
+    heading: "text-emerald-600 dark:text-emerald-300",
+  },
+  blue: {
+    pill: "bg-blue-500/10 text-blue-600 border-blue-500/20 hover:bg-blue-500/20 hover:border-blue-500/50 dark:bg-blue-400/10 dark:text-blue-300 dark:border-blue-400/30 dark:hover:border-blue-400/70 dark:hover:text-blue-200",
+    heading: "text-blue-600 dark:text-blue-300",
+  },
+  cyan: {
+    pill: "bg-cyan-500/10 text-cyan-600 border-cyan-500/20 hover:bg-cyan-500/20 hover:border-cyan-500/50 dark:bg-cyan-400/10 dark:text-cyan-300 dark:border-cyan-400/30 dark:hover:border-cyan-400/70 dark:hover:text-cyan-200",
+    heading: "text-cyan-600 dark:text-cyan-300",
+  },
+  indigo: {
+    pill: "bg-indigo-500/10 text-indigo-600 border-indigo-500/20 hover:bg-indigo-500/20 hover:border-indigo-500/50 dark:bg-indigo-400/10 dark:text-indigo-300 dark:border-indigo-400/30 dark:hover:border-indigo-400/70 dark:hover:text-indigo-200",
+    heading: "text-indigo-600 dark:text-indigo-300",
+  },
+  purple: {
+    pill: "bg-purple-500/10 text-purple-600 border-purple-500/20 hover:bg-purple-500/20 hover:border-purple-500/50 dark:bg-purple-400/10 dark:text-purple-300 dark:border-purple-400/30 dark:hover:border-purple-400/70 dark:hover:text-purple-200",
+    heading: "text-purple-600 dark:text-purple-300",
+  },
+};
 
 export function Skills() {
   const sectionRef = useRef(null);
@@ -111,8 +129,8 @@ export function Skills() {
       }}
     >
       {/* Ambient orbs */}
-      <div className="absolute pointer-events-none" style={{ top: "20%", left: "-5%", width: 280, height: 280, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%)" : "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)" }} />
-      <div className="absolute pointer-events-none" style={{ bottom: "10%", right: "-3%", width: 300, height: 300, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)" : "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)" }} />
+      <div className="absolute pointer-events-none" style={{ top: "20%", left: "-5%", width: 280, height: 280, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(139,92,246,0.16) 0%, transparent 70%)" : "radial-gradient(circle, rgba(99,102,241,0.13) 0%, transparent 70%)" }} />
+      <div className="absolute pointer-events-none" style={{ bottom: "10%", right: "-3%", width: 300, height: 300, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(0,212,170,0.14) 0%, transparent 70%)" : "radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%)" }} />
       <div className="relative z-10 max-w-7xl mx-auto">
 
         {/* Header */}
@@ -123,7 +141,7 @@ export function Skills() {
           className="text-center mb-14"
         >
           <h2 className="text-4xl font-bold text-foreground mb-3">
-            Skills &amp; Expertise
+            <span className="squiggle-underline font-display">Skills &amp; Expertise</span>
           </h2>
           <p className="text-muted text-lg">
             Tools and technologies I work with every day
@@ -135,6 +153,7 @@ export function Skills() {
           {skillGroups.map((group, gi) => {
             const HeadingIcon = group.icon;
             const isLast = gi === skillGroups.length - 1;
+            const styles = COLOR_STYLES[group.color] ?? COLOR_STYLES.emerald;
             return (
               <motion.div
                 key={group.heading}
@@ -145,8 +164,8 @@ export function Skills() {
               >
                 {/* Group heading */}
                 <div className="flex items-center gap-2 mb-5">
-                  <HeadingIcon size={15} className={HEADING_CLASS} />
-                  <p className={`text-xs font-bold uppercase tracking-widest ${HEADING_CLASS}`}>
+                  <HeadingIcon size={15} className={styles.heading} />
+                  <p className={`text-xs font-bold uppercase tracking-widest ${styles.heading}`}>
                     {group.heading}
                   </p>
                 </div>
@@ -156,13 +175,15 @@ export function Skills() {
                   {group.skills.map((skill) => {
                     const Icon = skill.icon;
                     return (
-                      <span
+                      <motion.span
                         key={skill.label}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 cursor-default hover:scale-105 ${PILL_CLASS}`}
+                        whileHover={{ scale: 1.08, rotate: [0, -3, 3, 0] }}
+                        transition={{ duration: 0.35 }}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border cursor-default ${styles.pill}`}
                       >
                         <Icon size={11} />
                         {skill.label}
-                      </span>
+                      </motion.span>
                     );
                   })}
                 </div>

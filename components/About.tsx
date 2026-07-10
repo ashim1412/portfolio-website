@@ -35,8 +35,8 @@ export function About() {
           width: 320, height: 320,
           borderRadius: "50%",
           background: isDark
-            ? "radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)"
-            : "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)",
+            ? "radial-gradient(circle, rgba(59,130,246,0.16) 0%, transparent 70%)"
+            : "radial-gradient(circle, rgba(99,102,241,0.14) 0%, transparent 70%)",
         }}
       />
       <div
@@ -46,8 +46,8 @@ export function About() {
           width: 240, height: 240,
           borderRadius: "50%",
           background: isDark
-            ? "radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)"
-            : "radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)",
+            ? "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)"
+            : "radial-gradient(circle, rgba(59,130,246,0.13) 0%, transparent 70%)",
         }}
       />
       <div className="relative z-10 max-w-7xl mx-auto">
@@ -59,7 +59,7 @@ export function About() {
           animate={isInView ? "visible" : "hidden"}
           className="text-4xl font-bold text-foreground text-center mb-12"
         >
-          About Me
+          <span className="squiggle-underline font-display">About Me</span>
         </motion.h2>
 
         {/* Two-column layout */}
@@ -71,17 +71,21 @@ export function About() {
         >
           {/* ── Left: profile photo ── */}
           <div className="flex-shrink-0 flex justify-center lg:justify-start">
-            <div className="relative w-64 rounded-2xl overflow-hidden border border-blue-500/30 shadow-[0_0_40px_rgba(59,130,246,0.15)]">
+            <motion.div
+              className="relative w-64 aspect-[4/5] overflow-hidden border-4 border-blue-500/30 shadow-[0_0_40px_rgba(59,130,246,0.15)] animate-blob"
+              whileHover={{ rotate: 2, scale: 1.03 }}
+              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+            >
               <Image
                 src="/headshot.jpg"
                 alt="Ashim Shrestha"
                 width={400}
                 height={500}
-                className="w-full h-auto object-cover"
+                className="w-full h-full object-cover"
                 sizes="256px"
                 priority
               />
-            </div>
+            </motion.div>
           </div>
 
           {/* ── Right: bio ── */}

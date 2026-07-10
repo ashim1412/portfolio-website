@@ -72,12 +72,18 @@ function ProjectCard({ repo, index, onOpenModal }: CardProps) {
       initial="hidden"
       animate="visible"
       custom={index}
-      className="group flex flex-col rounded-xl border border-border bg-secondary p-6 transition-all duration-300 hover:border-blue-500/30 hover:shadow-[0_8px_30px_rgba(59,130,246,0.12)] hover:-translate-y-1"
+      whileHover={{ y: -6, rotate: index % 2 === 0 ? -1 : 1, scale: 1.015 }}
+      transition={{ type: "spring", stiffness: 260, damping: 20 }}
+      className="group flex flex-col rounded-xl border border-border bg-secondary p-6 hover:border-blue-500/30 hover:shadow-[0_8px_30px_rgba(59,130,246,0.12)]"
     >
       {/* Language emoji */}
-      <span className="text-3xl mb-4 leading-none select-none">
+      <motion.span
+        whileHover={{ rotate: [0, -10, 10, 0] }}
+        transition={{ duration: 0.4 }}
+        className="text-3xl mb-4 leading-none select-none inline-block w-fit"
+      >
         {LANG_EMOJI[repo.language ?? ""] ?? "📁"}
-      </span>
+      </motion.span>
 
       {/* Title */}
       <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-blue-400 transition-colors capitalize">
@@ -113,31 +119,40 @@ function ProjectCard({ repo, index, onOpenModal }: CardProps) {
 
       {/* Buttons */}
       <div className="flex gap-2 mt-auto">
-        <button
+        <motion.button
           onClick={() => onOpenModal(repo)}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-400 text-white text-xs font-semibold transition-all duration-200 hover:scale-105"
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 400, damping: 14 }}
+          className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-400 text-white text-xs font-semibold"
         >
           View Details
-        </button>
-        <a
+        </motion.button>
+        <motion.a
           href={repo.html_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-border hover:border-foreground/40 text-muted text-xs font-semibold transition-all duration-200 hover:scale-105 hover:text-foreground"
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 400, damping: 14 }}
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-border hover:border-foreground/40 text-muted text-xs font-semibold hover:text-foreground"
         >
           <Github size={13} />
           GitHub
-        </a>
+        </motion.a>
         {repo.homepage && (
-          <a
+          <motion.a
             href={repo.homepage}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-3 py-2 rounded-full border border-border hover:border-blue-500/50 text-muted transition-all duration-200 hover:scale-105 hover:text-blue-400"
+            whileHover={{ scale: 1.1, rotate: 8 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 14 }}
+            className="inline-flex items-center justify-center px-3 py-2 rounded-full border border-border hover:border-blue-500/50 text-muted hover:text-blue-400"
             aria-label="Live demo"
           >
             <ExternalLink size={13} />
-          </a>
+          </motion.a>
         )}
       </div>
     </motion.div>
@@ -186,8 +201,8 @@ export function Projects() {
         }}
       >
         {/* Ambient orbs */}
-        <div className="absolute pointer-events-none" style={{ top: "-60px", right: "15%", width: 350, height: 350, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)" : "radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)" }} />
-        <div className="absolute pointer-events-none" style={{ bottom: "-40px", left: "10%", width: 260, height: 260, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 70%)" : "radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%)" }} />
+        <div className="absolute pointer-events-none" style={{ top: "-60px", right: "15%", width: 350, height: 350, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)" : "radial-gradient(circle, rgba(59,130,246,0.13) 0%, transparent 70%)" }} />
+        <div className="absolute pointer-events-none" style={{ bottom: "-40px", left: "10%", width: 260, height: 260, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(236,72,153,0.13) 0%, transparent 70%)" : "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)" }} />
         <div className="relative z-10 max-w-7xl mx-auto">
           {/* Header */}
           <motion.div
@@ -197,7 +212,7 @@ export function Projects() {
             className="text-center mb-12"
           >
             <h2 className="text-4xl font-bold text-foreground mb-3">
-              Featured Projects
+              <span className="squiggle-underline font-display">Featured Projects</span>
             </h2>
             <p className="text-lg text-muted">
               Data-driven solutions and analytics projects
