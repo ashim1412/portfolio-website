@@ -116,7 +116,7 @@ export function Hero() {
         className="absolute inset-0 animate-gradient-shift transition-all duration-700"
         style={{
           backgroundImage: isDark
-            ? "linear-gradient(135deg, #0a1318 0%, #0f1923 30%, #0d2420 60%, #0f1923 100%)"
+            ? "linear-gradient(135deg, #0c1a22 0%, #12222e 30%, #0e2f2a 60%, #14202e 100%)"
             : "linear-gradient(135deg, #dbeafe 0%, #ede9fe 40%, #e0f2fe 70%, #f0f9ff 100%)",
         }}
       />
@@ -126,8 +126,8 @@ export function Hero() {
         className="absolute inset-0"
         style={{
           background: isDark
-            ? "radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.08) 0%, transparent 70%)"
-            : "radial-gradient(ellipse at 50% 50%, rgba(99,102,241,0.06) 0%, transparent 70%)",
+            ? "radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.16) 0%, transparent 70%)"
+            : "radial-gradient(ellipse at 50% 50%, rgba(99,102,241,0.10) 0%, transparent 70%)",
         }}
       />
 
@@ -146,8 +146,8 @@ export function Hero() {
           left: "10%",
           top: "15%",
           background: isDark
-            ? "radial-gradient(circle, rgba(0,212,170,0.06) 0%, transparent 70%)"
-            : "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)",
+            ? "radial-gradient(circle, rgba(0,212,170,0.16) 0%, transparent 70%)"
+            : "radial-gradient(circle, rgba(99,102,241,0.13) 0%, transparent 70%)",
         }}
         animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
@@ -160,8 +160,8 @@ export function Hero() {
           right: "8%",
           bottom: "20%",
           background: isDark
-            ? "radial-gradient(circle, rgba(0,184,150,0.06) 0%, transparent 70%)"
-            : "radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%)",
+            ? "radial-gradient(circle, rgba(168,85,247,0.14) 0%, transparent 70%)"
+            : "radial-gradient(circle, rgba(59,130,246,0.11) 0%, transparent 70%)",
         }}
         animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.7, 0.4] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}

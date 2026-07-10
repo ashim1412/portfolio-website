@@ -35,8 +35,8 @@ export function About() {
           width: 320, height: 320,
           borderRadius: "50%",
           background: isDark
-            ? "radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)"
-            : "radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)",
+            ? "radial-gradient(circle, rgba(59,130,246,0.16) 0%, transparent 70%)"
+            : "radial-gradient(circle, rgba(99,102,241,0.14) 0%, transparent 70%)",
         }}
       />
       <div
@@ -46,8 +46,8 @@ export function About() {
           width: 240, height: 240,
           borderRadius: "50%",
           background: isDark
-            ? "radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)"
-            : "radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)",
+            ? "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)"
+            : "radial-gradient(circle, rgba(59,130,246,0.13) 0%, transparent 70%)",
         }}
       />
       <div className="relative z-10 max-w-7xl mx-auto">

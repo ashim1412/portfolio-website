@@ -129,8 +129,8 @@ export function Skills() {
       }}
     >
       {/* Ambient orbs */}
-      <div className="absolute pointer-events-none" style={{ top: "20%", left: "-5%", width: 280, height: 280, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%)" : "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)" }} />
-      <div className="absolute pointer-events-none" style={{ bottom: "10%", right: "-3%", width: 300, height: 300, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)" : "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)" }} />
+      <div className="absolute pointer-events-none" style={{ top: "20%", left: "-5%", width: 280, height: 280, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(139,92,246,0.16) 0%, transparent 70%)" : "radial-gradient(circle, rgba(99,102,241,0.13) 0%, transparent 70%)" }} />
+      <div className="absolute pointer-events-none" style={{ bottom: "10%", right: "-3%", width: 300, height: 300, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(0,212,170,0.14) 0%, transparent 70%)" : "radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%)" }} />
       <div className="relative z-10 max-w-7xl mx-auto">
 
         {/* Header */}
