@@ -75,6 +75,35 @@ html.light {
     background-size: 300% 300%;
     animation: gradientShift 12s ease infinite;
   }
+
+  .font-display {
+    font-family: var(--font-display), system-ui, sans-serif;
+  }
+
+  /* Hand-drawn squiggle underline, used beneath playful headings.
+     SVG data-URIs are isolated documents, so var(--accent) can't be
+     used inside them — the color is hardcoded per theme instead. */
+  .squiggle-underline {
+    position: relative;
+    display: inline-block;
+  }
+
+  .squiggle-underline::after {
+    content: "";
+    position: absolute;
+    left: 2%;
+    right: 2%;
+    bottom: -0.14em;
+    height: 0.22em;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' preserveAspectRatio='none'%3E%3Cpath d='M0 8 Q 8 0, 16 8 T 32 8 T 48 8 T 64 8 T 80 8 T 96 8' fill='none' stroke='%2300d4aa' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-size: 48px 100%;
+    opacity: 0.7;
+  }
+
+  html.light .squiggle-underline::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' preserveAspectRatio='none'%3E%3Cpath d='M0 8 Q 8 0, 16 8 T 32 8 T 48 8 T 64 8 T 80 8 T 96 8' fill='none' stroke='%233b82f6' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+  }
 }
 
 @keyframes gradientShift {

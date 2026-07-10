@@ -1,6 +1,7 @@
 "use client";
 
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail, ArrowUp } from "lucide-react";
+import { motion } from "framer-motion";
 import { personalInfo } from "@/data/portfolio";
 import { useTheme } from "next-themes";
 
@@ -29,31 +30,44 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-4">
-            <a
+            <motion.a
               href={personalInfo.github}
               target="_blank"
               rel="noopener noreferrer"
+              whileHover={{ scale: 1.2, rotate: -8 }}
               className="text-muted hover:text-foreground transition-colors"
               aria-label="GitHub"
             >
               <Github size={18} />
-            </a>
-            <a
+            </motion.a>
+            <motion.a
               href={personalInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
+              whileHover={{ scale: 1.2, rotate: 8 }}
               className="text-muted hover:text-foreground transition-colors"
               aria-label="LinkedIn"
             >
               <Linkedin size={18} />
-            </a>
-            <a
+            </motion.a>
+            <motion.a
               href={`mailto:${personalInfo.email}`}
+              whileHover={{ scale: 1.2, rotate: -8 }}
               className="text-muted hover:text-foreground transition-colors"
               aria-label="Email"
             >
               <Mail size={18} />
-            </a>
+            </motion.a>
+
+            <motion.a
+              href="#"
+              whileHover={{ y: -4 }}
+              whileTap={{ scale: 0.9 }}
+              className="ml-2 flex items-center justify-center w-9 h-9 rounded-full border border-border text-muted hover:text-accent hover:border-accent/50 transition-colors"
+              aria-label="Back to top"
+            >
+              <ArrowUp size={16} />
+            </motion.a>
           </div>
         </div>
       </div>

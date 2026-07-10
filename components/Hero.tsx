@@ -1,9 +1,23 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowDown, Github, Download } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState, useMemo } from "react";
+
+const ROLES = [
+  "Data Analyst & Growth Analytics Professional",
+  "Turning Numbers Into Decisions 📊",
+  "Cohorts, Funnels & A/B Tests 🧪",
+  "Dashboard Whisperer ✨",
+];
+
+const FLOATING_EMOJI = [
+  { emoji: "📈", x: "12%", y: "22%", size: 34, delay: 0 },
+  { emoji: "🔍", x: "85%", y: "18%", size: 28, delay: 1.2 },
+  { emoji: "📊", x: "78%", y: "68%", size: 32, delay: 2.4 },
+  { emoji: "✨", x: "8%", y: "72%", size: 24, delay: 0.6 },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -57,10 +71,41 @@ function StarField() {
   );
 }
 
+function FloatingEmoji() {
+  return (
+    <>
+      {FLOATING_EMOJI.map((item, i) => (
+        <motion.span
+          key={i}
+          className="absolute select-none pointer-events-none opacity-70"
+          style={{ left: item.x, top: item.y, fontSize: item.size }}
+          animate={{ y: [0, -18, 0], rotate: [0, 6, -6, 0] }}
+          transition={{
+            duration: 6 + i,
+            delay: item.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          {item.emoji}
+        </motion.span>
+      ))}
+    </>
+  );
+}
+
 export function Hero() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [roleIndex, setRoleIndex] = useState(0);
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setRoleIndex((i) => (i + 1) % ROLES.length);
+    }, 3000);
+    return () => clearInterval(id);
+  }, []);
 
   const isDark = !mounted || theme !== "light";
 
@@ -88,6 +133,9 @@ export function Hero() {
 
       {/* Starry background */}
       <StarField />
+
+      {/* Floating data-themed emoji */}
+      <FloatingEmoji />
 
       {/* Floating orbs */}
       <motion.div
@@ -127,23 +175,34 @@ export function Hero() {
           initial="hidden"
           animate="visible"
           custom={0.2}
-          className="text-6xl sm:text-7xl lg:text-8xl font-bold mb-4 tracking-tight leading-none"
+          className="text-6xl sm:text-7xl lg:text-8xl font-bold mb-8 tracking-tight leading-none"
           style={{ color: isDark ? "#ffffff" : "#0f172a" }}
         >
-          Ashim Shrestha
+          <span className="squiggle-underline font-display">Ashim Shrestha</span>
         </motion.h1>
 
-        {/* Subtitle */}
-        <motion.p
+        {/* Subtitle — cycles through a few playful role taglines */}
+        <motion.div
           variants={fadeUp}
           initial="hidden"
           animate="visible"
           custom={0.4}
-          className="text-2xl sm:text-3xl font-light mb-5 tracking-wide"
-          style={{ color: isDark ? "#00d4aa" : "#0d9488" }}
+          className="h-10 sm:h-9 mb-5 flex items-center justify-center"
         >
-          Data Analyst &amp; Growth Analytics Professional
-        </motion.p>
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={roleIndex}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="text-2xl sm:text-3xl font-light tracking-wide"
+              style={{ color: isDark ? "#00d4aa" : "#0d9488" }}
+            >
+              {ROLES[roleIndex]}
+            </motion.p>
+          </AnimatePresence>
+        </motion.div>
 
         {/* Tagline */}
         <motion.p
@@ -167,18 +226,24 @@ export function Hero() {
           custom={0.8}
           className="flex flex-wrap items-center justify-center gap-4"
         >
-          <a
+          <motion.a
             href="#projects"
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-accent hover:bg-accent-hover text-white font-semibold text-sm tracking-wide transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-[rgba(0,212,170,0.3)]"
+            whileHover={{ scale: 1.06, rotate: -1 }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 12 }}
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-accent hover:bg-accent-hover text-white font-semibold text-sm tracking-wide hover:shadow-lg hover:shadow-[rgba(0,212,170,0.3)]"
           >
             View Projects
-          </a>
+          </motion.a>
 
-          <a
+          <motion.a
             href="https://github.com/ashim1412"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-sm tracking-wide transition-all duration-200 hover:scale-105"
+            whileHover={{ scale: 1.06, rotate: 1 }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 12 }}
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-sm tracking-wide"
             style={{
               border: isDark ? "1px solid rgba(255,255,255,0.30)" : "1px solid rgba(15,23,42,0.25)",
               color: isDark ? "white" : "#0f172a",
@@ -186,12 +251,15 @@ export function Hero() {
           >
             <Github size={16} />
             GitHub
-          </a>
+          </motion.a>
 
-          <a
+          <motion.a
             href="/Ashim-Shrestha.pdf"
             download="Ashim-Shrestha-Resume.pdf"
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-sm tracking-wide transition-all duration-200 hover:scale-105"
+            whileHover={{ scale: 1.06, rotate: -1 }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 12 }}
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-sm tracking-wide"
             style={{
               border: isDark ? "1px solid rgba(255,255,255,0.30)" : "1px solid rgba(15,23,42,0.25)",
               color: isDark ? "white" : "#0f172a",
@@ -199,7 +267,7 @@ export function Hero() {
           >
             <Download size={16} />
             Download Resume
-          </a>
+          </motion.a>
         </motion.div>
       </div>
 

@@ -29,6 +29,42 @@ function Toast({ message, onDismiss }: { message: string; onDismiss: () => void 
   );
 }
 
+// ── Lightweight confetti burst (pure Framer Motion, no extra dependency) ────────
+
+const CONFETTI_COLORS = ["#00d4aa", "#3b82f6", "#a855f7", "#fbbf24", "#f472b6"];
+
+function ConfettiBurst() {
+  const pieces = useState(() =>
+    Array.from({ length: 26 }, (_, i) => {
+      const angle = (Math.PI * 2 * i) / 26 + Math.random() * 0.4;
+      const distance = 90 + Math.random() * 90;
+      return {
+        id: i,
+        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+        x: Math.cos(angle) * distance,
+        y: Math.sin(angle) * distance - 40,
+        rotate: Math.random() * 360,
+        delay: Math.random() * 0.15,
+      };
+    })
+  )[0];
+
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-start justify-center overflow-visible">
+      {pieces.map((p) => (
+        <motion.span
+          key={p.id}
+          className="absolute top-10 w-2 h-2 rounded-sm"
+          style={{ backgroundColor: p.color }}
+          initial={{ x: 0, y: 0, opacity: 1, rotate: 0 }}
+          animate={{ x: p.x, y: p.y, opacity: 0, rotate: p.rotate }}
+          transition={{ duration: 1.1, delay: p.delay, ease: "easeOut" }}
+        />
+      ))}
+    </div>
+  );
+}
+
 // ── Contact card config ────────────────────────────────────────────────────────
 
 const CONTACT_ITEMS = [
@@ -103,9 +139,11 @@ function ContactCard({
       initial="hidden"
       animate="visible"
       custom={index}
+      whileHover={{ y: -6, rotate: index % 2 === 0 ? -1.5 : 1.5 }}
       whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 300, damping: 18 }}
       onClick={item.action === "copy" ? handleClick : undefined}
-      className={`group flex flex-col items-center text-center rounded-xl border border-border bg-secondary p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-blue-500/40 hover:shadow-[0_8px_30px_rgba(59,130,246,0.12)] ${
+      className={`group flex flex-col items-center text-center rounded-xl border border-border bg-secondary p-6 hover:border-blue-500/40 hover:shadow-[0_8px_30px_rgba(59,130,246,0.12)] ${
         item.action === "copy" ? "cursor-pointer" : ""
       }`}
     >
@@ -230,9 +268,16 @@ function ContactForm() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="flex flex-col items-center gap-4 rounded-xl border border-blue-500/30 bg-blue-500/10 p-10 text-center"
+          className="relative flex flex-col items-center gap-4 rounded-xl border border-blue-500/30 bg-blue-500/10 p-10 text-center overflow-hidden"
         >
-          <CheckCircle size={40} className="text-blue-400" />
+          <ConfettiBurst />
+          <motion.div
+            initial={{ scale: 0.5, rotate: -20 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 12 }}
+          >
+            <CheckCircle size={40} className="text-blue-400" />
+          </motion.div>
           <p className="text-foreground font-semibold text-lg">Message sent!</p>
           <p className="text-muted text-sm">
             Thanks for reaching out — I'll get back to you soon.
@@ -373,7 +418,7 @@ export function Contact() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold text-foreground mb-4">
-            Let&apos;s Connect
+            <span className="squiggle-underline font-display">Let&apos;s Connect</span>
           </h2>
           <p className="text-lg text-muted max-w-xl mx-auto">
             Want to improve acquisition, retention, or marketing performance with better data? Let&apos;s talk.
