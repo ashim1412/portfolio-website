@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -28,6 +28,11 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
 
   return (
     <header
@@ -101,22 +106,43 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile menu */}
+      </nav>
+
+      {/* Mobile menu — fixed overlay with its own solid backdrop, independent
+          of the header's scroll-based transparency, so it's always legible
+          regardless of what's scrolled behind it. */}
+      <AnimatePresence>
         {isOpen && (
-          <div className="md:hidden pb-4 border-t border-border mt-2">
-            <ul className="flex flex-col gap-4 pt-4">
-              {navLinks.map((link) => (
-                <li key={link.href}>
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ type: "spring", stiffness: 350, damping: 30 }}
+            className="md:hidden fixed inset-x-0 top-16 z-40 bg-background/95 backdrop-blur-md border-b border-border shadow-xl"
+          >
+            <ul className="flex flex-col gap-1 px-4 sm:px-6 py-4">
+              {navLinks.map((link, i) => (
+                <motion.li
+                  key={link.href}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                >
                   <a
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className="text-muted hover:text-foreground transition-colors"
+                    className="block py-2.5 text-muted hover:text-foreground transition-colors"
                   >
                     {link.label}
                   </a>
-                </li>
+                </motion.li>
               ))}
-              <li>
+              <motion.li
+                initial={{ opacity: 0, x: -12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: navLinks.length * 0.04 }}
+                className="pt-2"
+              >
                 <a
                   href="#send-message"
                   onClick={() => setIsOpen(false)}
@@ -124,11 +150,11 @@ export function Navbar() {
                 >
                   Hire Me
                 </a>
-              </li>
+              </motion.li>
             </ul>
-          </div>
+          </motion.div>
         )}
-      </nav>
+      </AnimatePresence>
     </header>
   );
 }
