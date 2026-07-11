@@ -104,6 +104,44 @@ html.light {
   html.light .squiggle-underline::after {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' preserveAspectRatio='none'%3E%3Cpath d='M0 8 Q 8 0, 16 8 T 32 8 T 48 8 T 64 8 T 80 8 T 96 8' fill='none' stroke='%233b82f6' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
   }
+
+  /* Blog post body — hand-styled instead of pulling in @tailwindcss/typography */
+  .mdx-content {
+    @apply text-foreground/80 leading-relaxed;
+  }
+  .mdx-content > * + * {
+    @apply mt-5;
+  }
+  .mdx-content h2 {
+    @apply text-2xl font-bold text-foreground mt-10 mb-2;
+  }
+  .mdx-content h3 {
+    @apply text-xl font-bold text-foreground mt-8 mb-2;
+  }
+  .mdx-content a {
+    @apply text-accent hover:underline;
+  }
+  .mdx-content strong {
+    @apply text-foreground font-semibold;
+  }
+  .mdx-content ul {
+    @apply list-disc pl-6 space-y-1.5;
+  }
+  .mdx-content ol {
+    @apply list-decimal pl-6 space-y-1.5;
+  }
+  .mdx-content code {
+    @apply text-accent bg-secondary border border-border rounded px-1.5 py-0.5 text-sm font-mono;
+  }
+  .mdx-content pre {
+    @apply bg-secondary border border-border rounded-xl p-4 overflow-x-auto text-sm;
+  }
+  .mdx-content pre code {
+    @apply bg-transparent border-none p-0 text-foreground/90;
+  }
+  .mdx-content blockquote {
+    @apply border-l-2 border-accent/50 pl-4 italic text-muted;
+  }
 }
 
 @keyframes gradientShift {
