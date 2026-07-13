@@ -35,7 +35,7 @@ const instrumentSans = Instrument_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: `${personalInfo.name} — ${personalInfo.title}`,
+    default: `${personalInfo.name} | ${personalInfo.title}`,
     template: `%s | ${personalInfo.name}`,
   },
   description: personalInfo.bio,
@@ -64,24 +64,16 @@ export const metadata: Metadata = {
     "customer insights",
   ],
   authors: [{ name: personalInfo.name }],
-  icons: {
-    icon: [
-      { url: "/logo-dark.png", media: "(prefers-color-scheme: dark)" },
-      { url: "/logo-light.png", media: "(prefers-color-scheme: light)" },
-    ],
-    shortcut: "/logo-dark.png",
-    apple: "/logo-dark.png",
-  },
   openGraph: {
     type: "website",
     locale: "en_US",
-    title: `${personalInfo.name} — ${personalInfo.title}`,
+    title: `${personalInfo.name} | ${personalInfo.title}`,
     description: personalInfo.bio,
     siteName: personalInfo.name,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${personalInfo.name} — ${personalInfo.title}`,
+    title: `${personalInfo.name} | ${personalInfo.title}`,
     description: personalInfo.bio,
   },
 };

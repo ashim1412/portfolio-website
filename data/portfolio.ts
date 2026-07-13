@@ -1,6 +1,6 @@
 export const personalInfo = {
   name: "Ashim Shrestha",
-  title: "Data Analyst & Growth Analytics",
+  title: "Analytics Engineer, Data Analyst, Growth Marketing Professional",
   bio: "Analytics professional with 8+ years driving customer acquisition, retention, and revenue growth across fintech and e-commerce. Specializing in growth analytics, customer segmentation, experimentation, and marketing performance.",
   email: "hello@ashim-shrestha.com",
   github: "https://github.com/ashim1412",
