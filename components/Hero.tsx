@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { personalInfo } from "@/data/portfolio";
 
 // Highlighter-style phrase: a gradient filling only the bottom third of the
@@ -26,82 +27,204 @@ function Highlight({
   );
 }
 
-// 7 quarterly-growth bars whose color ramps blue → violet → emerald → coral
-// as they climb.
-const BARS = [
-  { h: 38, c: "#2f6bff" },
-  { h: 50, c: "#2f6bff" },
-  { h: 46, c: "#7c4dff" },
-  { h: 64, c: "#7c4dff" },
-  { h: 72, c: "#12b981" },
-  { h: 86, c: "#12b981" },
-  { h: 100, c: "#ff5b3a" },
+// Each slide is a mini analytics widget for a real result from the About
+// section, color-matched to that section's stat callouts.
+type Slide = {
+  file: string;
+  stat: string;
+  label: string;
+  color: string;
+  viz: "churn" | "conversion" | "cac";
+};
+
+const SLIDES: Slide[] = [
+  { file: "churn_model.sql", stat: "−50%", label: "Customer churn rate", color: "#12b981", viz: "churn" },
+  { file: "ab_test.sql", stat: "+18%", label: "A/B test conversion lift", color: "#ff5b3a", viz: "conversion" },
+  { file: "acquisition.sql", stat: "−12%", label: "Customer acquisition cost", color: "#2f6bff", viz: "cac" },
 ];
 
-function DashboardCard() {
+// ── Per-slide visualizations ──
+function Viz({ kind, color }: { kind: Slide["viz"]; color: string }) {
+  if (kind === "churn") {
+    // Downward area chart — churn declining month over month.
+    return (
+      <svg viewBox="0 0 300 130" preserveAspectRatio="none" className="w-full h-[130px]">
+        <defs>
+          <linearGradient id="churnFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.35" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M0,32 L60,44 L120,58 L180,64 L240,78 L300,84 L300,130 L0,130 Z"
+          fill="url(#churnFill)"
+        />
+        <polyline
+          points="0,32 60,44 120,58 180,64 240,78 300,84"
+          fill="none"
+          stroke={color}
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+
+  if (kind === "conversion") {
+    // Control vs. variant comparison — variant wins.
+    const bars = [
+      { label: "Control", h: 60, muted: true },
+      { label: "Variant", h: 92, muted: false },
+    ];
+    return (
+      <div className="h-[130px] flex items-end justify-center gap-10 px-2">
+        {bars.map((b) => (
+          <div key={b.label} className="flex flex-col items-center gap-2 w-20 h-full justify-end">
+            <div
+              className="w-full rounded-t-[6px]"
+              style={{
+                height: `${b.h}%`,
+                backgroundColor: b.muted ? "rgba(247,244,238,0.15)" : color,
+              }}
+            />
+            <span className="font-mono text-[11px] text-paper/45">{b.label}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // cac: descending quarterly bars.
+  const bars = [100, 90, 82, 74];
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 26 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: [0.2, 0.7, 0.2, 1], delay: 0.15 }}
-      className="relative rounded-[22px] bg-ink p-6 sm:p-7 text-paper shadow-[0_30px_60px_-30px_rgba(22,21,29,0.5)]"
-    >
-      {/* Window chrome */}
-      <div className="flex items-center gap-3 mb-7">
-        <div className="flex gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-accent-coral" />
-          <span className="w-3 h-3 rounded-full bg-accent-amber" />
-          <span className="w-3 h-3 rounded-full bg-accent-emerald" />
-        </div>
-        <span className="font-mono text-[12px] text-paper/45 tracking-[0.02em]">
-          revenue_growth.sql
-        </span>
-      </div>
-
-      {/* Headline stat */}
-      <div className="mb-7">
-        <div className="font-display font-bold text-[44px] leading-none tracking-[-0.03em] text-accent-emerald">
-          +42%
-        </div>
-        <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-paper/50 mt-2">
-          YoY revenue lift
-        </div>
-      </div>
-
-      {/* Bar chart */}
-      <div className="h-[140px] flex items-end gap-2.5">
-        {BARS.map((bar, i) => (
-          <motion.div
+    <div>
+      <div className="h-[110px] flex items-end gap-3">
+        {bars.map((h, i) => (
+          <div
             key={i}
-            className="flex-1 rounded-t-[5px] origin-bottom"
-            style={{ height: `${bar.h}%`, backgroundColor: bar.c }}
-            initial={{ scaleY: 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{
-              duration: 0.6,
-              ease: [0.2, 0.7, 0.2, 1],
-              delay: 0.4 + i * 0.1,
-            }}
+            className="flex-1 rounded-t-[5px]"
+            style={{ height: `${h}%`, backgroundColor: color, opacity: 1 - i * 0.14 }}
           />
         ))}
       </div>
-
-      {/* Axis */}
-      <div className="flex justify-between mt-3 font-mono text-[11px] text-paper/35 tracking-[0.04em]">
+      <div className="flex justify-between mt-2 font-mono text-[11px] text-paper/35 tracking-[0.04em]">
         <span>Q1</span>
         <span>Q2</span>
         <span>Q3</span>
         <span>Q4</span>
       </div>
+    </div>
+  );
+}
 
-      {/* Floating churn chip */}
+const slideVariants = {
+  enter: (dir: number) => ({ x: dir > 0 ? 48 : -48, opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (dir: number) => ({ x: dir > 0 ? -48 : 48, opacity: 0 }),
+};
+
+function DashboardCard() {
+  const [[index, dir], setState] = useState<[number, number]>([0, 1]);
+  const [paused, setPaused] = useState(false);
+
+  const paginate = (step: number) =>
+    setState(([i]) => [(i + step + SLIDES.length) % SLIDES.length, step]);
+  const goTo = (target: number) =>
+    setState(([i]) => [target, target >= i ? 1 : -1]);
+
+  // Auto-advance, paused on hover / drag.
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => paginate(1), 4500);
+    return () => clearInterval(id);
+  }, [paused, index]);
+
+  const slide = SLIDES[index];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 26 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: [0.2, 0.7, 0.2, 1], delay: 0.15 }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      className="relative rounded-[22px] bg-ink p-6 sm:p-7 text-paper shadow-[0_30px_60px_-30px_rgba(22,21,29,0.5)]"
+    >
+      <div className="relative min-h-[300px] overflow-hidden">
+        <AnimatePresence custom={dir} mode="wait">
+          <motion.div
+            key={index}
+            custom={dir}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.35, ease: [0.2, 0.7, 0.2, 1] }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragEnd={(_, info) => {
+              if (info.offset.x < -60) paginate(1);
+              else if (info.offset.x > 60) paginate(-1);
+            }}
+            className="cursor-grab active:cursor-grabbing"
+          >
+            {/* Window chrome */}
+            <div className="flex items-center gap-3 mb-7">
+              <div className="flex gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-accent-coral" />
+                <span className="w-3 h-3 rounded-full bg-accent-amber" />
+                <span className="w-3 h-3 rounded-full bg-accent-emerald" />
+              </div>
+              <span className="font-mono text-[12px] text-paper/45 tracking-[0.02em]">
+                {slide.file}
+              </span>
+            </div>
+
+            {/* Headline stat */}
+            <div className="mb-6">
+              <div
+                className="font-display font-bold text-[44px] leading-none tracking-[-0.03em]"
+                style={{ color: slide.color }}
+              >
+                {slide.stat}
+              </div>
+              <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-paper/50 mt-2">
+                {slide.label}
+              </div>
+            </div>
+
+            {/* Visualization */}
+            <Viz kind={slide.viz} color={slide.color} />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Slide indicators */}
+      <div className="flex items-center gap-2 mt-6">
+        {SLIDES.map((s, i) => (
+          <button
+            key={s.file}
+            onClick={() => goTo(i)}
+            aria-label={`Show ${s.label}`}
+            className="h-1.5 rounded-full transition-all duration-300"
+            style={{
+              width: i === index ? 22 : 6,
+              backgroundColor: i === index ? s.color : "rgba(247,244,238,0.25)",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Floating experience chip */}
       <motion.div
         animate={{ y: [0, -10, 0] }}
         transition={{ duration: 4, ease: "easeInOut", repeat: Infinity }}
         className="absolute -top-4 -right-3 sm:-right-4 flex items-center gap-2 rounded-full bg-accent-amber px-4 py-2 shadow-[0_12px_24px_-8px_rgba(255,176,32,0.6)]"
       >
         <span className="font-mono text-[13px] font-semibold text-ink tracking-[0.02em]">
-          churn −50%
+          8+ yrs
         </span>
       </motion.div>
     </motion.div>
