@@ -1,286 +1,120 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { useTheme } from "next-themes";
-import { ExternalLink, Github, RefreshCw } from "lucide-react";
-import { fetchRepos, daysAgo, type GitHubRepo } from "@/lib/github";
-import { ProjectModal } from "./ProjectModal";
+import { motion } from "framer-motion";
+import { personalInfo } from "@/data/portfolio";
 
-const PAGE_SIZE = 6;
-const GITHUB_USERNAME = "ashim1412";
-
-const LANG_EMOJI: Record<string, string> = {
-  Python: "🐍",
-  JavaScript: "⚡",
-  TypeScript: "⚡",
-  SQL: "🗄️",
-};
-
-const TAG_COLORS = [
-  "bg-blue-500/15 text-blue-400 border-blue-500/20",
-  "bg-purple-500/15 text-purple-400 border-purple-500/20",
-  "bg-cyan-500/15 text-cyan-400 border-cyan-500/20",
-  "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
+const projects = [
+  {
+    title: "Churn Early-Warning Model",
+    tag: "Fintech · Retention",
+    description:
+      "A propensity model flagging at-risk customers weeks before churn, wired into lifecycle campaigns.",
+    metric: "churn −50%",
+    metricColor: "#12b981",
+    gradient: "linear-gradient(135deg, #12b981, #2f6bff)",
+  },
+  {
+    title: "Experimentation Framework",
+    tag: "Growth · A/B Testing",
+    description:
+      "An end-to-end A/B testing framework standardizing experiment design, analysis, and rollout decisions.",
+    metric: "conversion +18%",
+    metricColor: "#ff5b3a",
+    gradient: "linear-gradient(135deg, #ff5b3a, #ffb020)",
+  },
+  {
+    title: "Marketplace KPI Warehouse",
+    tag: "E-commerce · BI",
+    description:
+      "A unified KPI warehouse consolidating marketplace metrics for 50+ product, marketing, and credit stakeholders.",
+    metric: "CAC −12%",
+    metricColor: "#7c4dff",
+    gradient: "linear-gradient(135deg, #7c4dff, #2f6bff)",
+  },
 ];
 
-function tagColor(index: number) {
-  return TAG_COLORS[index % TAG_COLORS.length];
-}
+const STRIPES =
+  "repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 1px, transparent 1px, transparent 11px)";
 
-// ── Skeleton card ──────────────────────────────────────────────────────────────
-function SkeletonCard() {
+export function Projects() {
   return (
-    <div className="rounded-xl border border-border bg-secondary p-6 animate-pulse">
-      <div className="h-8 w-8 rounded-full bg-border mb-4" />
-      <div className="h-5 w-2/3 rounded bg-border mb-3" />
-      <div className="h-3 w-full rounded bg-border/60 mb-2" />
-      <div className="h-3 w-4/5 rounded bg-border/60 mb-6" />
-      <div className="flex gap-2 mb-4">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="h-5 w-16 rounded-full bg-border/60" />
-        ))}
-      </div>
-      <div className="flex gap-2">
-        <div className="h-9 w-28 rounded-full bg-border/60" />
-        <div className="h-9 w-24 rounded-full bg-border/60" />
-      </div>
-    </div>
-  );
-}
-
-// ── Project card ───────────────────────────────────────────────────────────────
-interface CardProps {
-  repo: GitHubRepo;
-  index: number;
-  onOpenModal: (repo: GitHubRepo) => void;
-}
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, delay: i * 0.1, ease: "easeOut" },
-  }),
-};
-
-function ProjectCard({ repo, index, onOpenModal }: CardProps) {
-  return (
-    <motion.div
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      custom={index}
-      whileHover={{ y: -6, rotate: index % 2 === 0 ? -1 : 1, scale: 1.015 }}
-      transition={{ type: "spring", stiffness: 260, damping: 20 }}
-      className="group flex flex-col rounded-xl border border-border bg-secondary p-6 hover:border-blue-500/30 hover:shadow-[0_8px_30px_rgba(59,130,246,0.12)]"
+    <section
+      id="projects"
+      className="scroll-mt-20 px-5 sm:px-8 py-16 lg:py-28"
     >
-      {/* Language emoji */}
-      <motion.span
-        whileHover={{ rotate: [0, -10, 10, 0] }}
-        transition={{ duration: 0.4 }}
-        className="text-3xl mb-4 leading-none select-none inline-block w-fit"
-      >
-        {LANG_EMOJI[repo.language ?? ""] ?? "📁"}
-      </motion.span>
-
-      {/* Title */}
-      <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-blue-400 transition-colors capitalize">
-        {repo.name.replace(/-/g, " ")}
-      </h3>
-
-      {/* Description */}
-      <p className="text-muted text-sm leading-relaxed line-clamp-2 mb-4 flex-1">
-        {repo.description ?? "No description provided."}
-      </p>
-
-      {/* Topics */}
-      {repo.topics.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          {repo.topics.slice(0, 4).map((topic, i) => (
-            <span
-              key={topic}
-              className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${tagColor(i)}`}
+      <div className="max-w-6xl mx-auto">
+        {/* Header row */}
+        <div className="flex flex-wrap items-end justify-between gap-4 mb-12">
+          <div>
+            <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-accent-blue mb-4">
+              // Featured Projects
+            </p>
+            <h2
+              className="font-display font-bold tracking-[-0.02em] text-ink"
+              style={{ fontSize: "clamp(32px, 4.5vw, 56px)" }}
             >
-              {topic}
-            </span>
-          ))}
-          {repo.topics.length > 4 && (
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium border border-border text-muted">
-              +{repo.topics.length - 4}
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* Updated timestamp */}
-      <p className="text-xs text-muted mb-5">Updated {daysAgo(repo.updated_at)}</p>
-
-      {/* Buttons */}
-      <div className="flex gap-2 mt-auto">
-        <motion.button
-          onClick={() => onOpenModal(repo)}
-          whileHover={{ scale: 1.06 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 400, damping: 14 }}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-400 text-white text-xs font-semibold"
-        >
-          View Details
-        </motion.button>
-        <motion.a
-          href={repo.html_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          whileHover={{ scale: 1.06 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 400, damping: 14 }}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-border hover:border-foreground/40 text-muted text-xs font-semibold hover:text-foreground"
-        >
-          <Github size={13} />
-          GitHub
-        </motion.a>
-        {repo.homepage && (
-          <motion.a
-            href={repo.homepage}
+              Data-driven solutions
+            </h2>
+          </div>
+          <a
+            href={personalInfo.github}
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.1, rotate: 8 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 14 }}
-            className="inline-flex items-center justify-center px-3 py-2 rounded-full border border-border hover:border-blue-500/50 text-muted hover:text-blue-400"
-            aria-label="Live demo"
+            className="font-mono text-[13px] uppercase tracking-[0.04em] text-accent-coral underline underline-offset-4 decoration-accent-coral/40 hover:decoration-accent-coral transition-colors"
           >
-            <ExternalLink size={13} />
-          </motion.a>
-        )}
-      </div>
-    </motion.div>
-  );
-}
-
-// ── Main section ──────────────────────────────────────────────────────────────
-export function Projects() {
-  const [repos, setRepos] = useState<GitHubRepo[]>([]);
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [selectedRepo, setSelectedRepo] = useState<GitHubRepo | null>(null);
-  const closeModal = useCallback(() => setSelectedRepo(null), []);
-
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme !== "light";
-
-  const load = async () => {
-    setStatus("loading");
-    try {
-      const data = await fetchRepos(GITHUB_USERNAME);
-      setRepos(data);
-      setStatus("success");
-    } catch {
-      setStatus("error");
-    }
-  };
-
-  useEffect(() => { load(); }, []);
-
-  const visible = repos.slice(0, visibleCount);
-  const hasMore = visibleCount < repos.length;
-
-  return (
-    <>
-      <section
-        id="projects"
-        ref={sectionRef}
-        className="relative py-20 px-6 overflow-hidden"
-        style={{
-          background: isDark
-            ? "linear-gradient(135deg, #0a0a1a 0%, #0a1628 40%, #0f0728 70%, #0a0a1a 100%)"
-            : "linear-gradient(135deg, #dbeafe 0%, #e0f2fe 40%, #ede9fe 70%, #f0f9ff 100%)",
-        }}
-      >
-        {/* Ambient orbs */}
-        <div className="absolute pointer-events-none" style={{ top: "-60px", right: "15%", width: 350, height: 350, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)" : "radial-gradient(circle, rgba(59,130,246,0.13) 0%, transparent 70%)" }} />
-        <div className="absolute pointer-events-none" style={{ bottom: "-40px", left: "10%", width: 260, height: 260, borderRadius: "50%", background: isDark ? "radial-gradient(circle, rgba(236,72,153,0.13) 0%, transparent 70%)" : "radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)" }} />
-        <div className="relative z-10 max-w-7xl mx-auto">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-4xl font-bold text-foreground mb-3">
-              <span className="squiggle-underline font-display">Featured Projects</span>
-            </h2>
-            <p className="text-lg text-muted">
-              Data-driven solutions and analytics projects
-            </p>
-          </motion.div>
-
-          {/* Loading */}
-          {status === "loading" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: PAGE_SIZE }).map((_, i) => (
-                <SkeletonCard key={i} />
-              ))}
-            </div>
-          )}
-
-          {/* Error */}
-          {status === "error" && (
-            <div className="flex flex-col items-center justify-center py-20 gap-4">
-              <p className="text-muted text-center">
-                Could not load projects from GitHub.
-              </p>
-              <button
-                onClick={load}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-border hover:border-blue-500/50 text-muted hover:text-blue-400 text-sm font-medium transition-all duration-200"
-              >
-                <RefreshCw size={15} />
-                Retry
-              </button>
-            </div>
-          )}
-
-          {/* Grid */}
-          {status === "success" && (
-            <>
-              {repos.length === 0 ? (
-                <p className="text-center text-muted py-16">No projects found.</p>
-              ) : (
-                <AnimatePresence mode="wait">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {visible.map((repo, i) => (
-                      <ProjectCard
-                        key={repo.name}
-                        repo={repo}
-                        index={i}
-                        onOpenModal={setSelectedRepo}
-                      />
-                    ))}
-                  </div>
-                </AnimatePresence>
-              )}
-
-              {/* Load more */}
-              {hasMore && (
-                <div className="flex justify-center mt-10">
-                  <button
-                    onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-                    className="px-8 py-3 rounded-full border border-border hover:border-blue-500/50 text-muted hover:text-blue-400 text-sm font-medium transition-all duration-200 hover:scale-105"
-                  >
-                    Load More Projects ({repos.length - visibleCount} remaining)
-                  </button>
-                </div>
-              )}
-            </>
-          )}
+            See all on GitHub →
+          </a>
         </div>
-      </section>
 
-      <ProjectModal repo={selectedRepo} onClose={closeModal} />
-    </>
+        {/* Cards */}
+        <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]">
+          {projects.map((project, i) => (
+            <motion.a
+              key={project.title}
+              href={personalInfo.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, ease: [0.2, 0.7, 0.2, 1], delay: i * 0.1 }}
+              className="group flex flex-col rounded-[22px] border border-ink/10 bg-white overflow-hidden transition-all duration-200 hover:-translate-y-1.5 hover:border-ink/25 hover:shadow-[0_30px_50px_-30px_rgba(22,21,29,0.4)]"
+            >
+              {/* Color-block header */}
+              <div
+                className="relative h-[168px]"
+                style={{ backgroundImage: project.gradient }}
+              >
+                <div className="absolute inset-0" style={{ backgroundImage: STRIPES }} />
+                <span className="absolute top-4 left-4 font-mono text-[11px] uppercase tracking-[0.08em] text-white px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-sm">
+                  {project.tag}
+                </span>
+              </div>
+
+              {/* Body */}
+              <div className="flex flex-col flex-1 p-6">
+                <h3 className="font-display font-semibold text-[21px] tracking-[-0.01em] text-ink mb-2">
+                  {project.title}
+                </h3>
+                <p className="text-[15px] leading-[1.55] text-ink/60 mb-6 flex-1">
+                  {project.description}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span
+                    className="font-mono text-[13px] font-semibold tracking-[0.02em]"
+                    style={{ color: project.metricColor }}
+                  >
+                    {project.metric}
+                  </span>
+                  <span className="text-ink/40 group-hover:text-ink group-hover:translate-x-1 transition-all" aria-hidden>
+                    →
+                  </span>
+                </div>
+              </div>
+            </motion.a>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

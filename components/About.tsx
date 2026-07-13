@@ -1,115 +1,81 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { useTheme } from "next-themes";
+import { motion } from "framer-motion";
 
-const sectionVariants = {
-  hidden:  { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+const reveal = {
+  hidden: { opacity: 0, y: 26 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.2, 0.7, 0.2, 1] } },
 };
 
 export function About() {
-  const sectionRef = useRef(null);
-  const isInView   = useInView(sectionRef, { once: true, margin: "-80px" });
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme !== "light";
-
   return (
     <section
       id="about"
-      ref={sectionRef}
-      className="relative py-20 px-6 overflow-hidden"
-      style={{
-        background: isDark
-          ? "linear-gradient(135deg, #0a0a1a 0%, #0d0a28 40%, #080e1e 70%, #0a0a1a 100%)"
-          : "linear-gradient(135deg, #e0f2fe 0%, #ede9fe 40%, #dbeafe 70%, #f0f9ff 100%)",
-      }}
+      className="scroll-mt-20 px-5 sm:px-8 py-16 lg:py-28"
     >
-      {/* Ambient orbs */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          top: "-80px", right: "10%",
-          width: 320, height: 320,
-          borderRadius: "50%",
-          background: isDark
-            ? "radial-gradient(circle, rgba(59,130,246,0.16) 0%, transparent 70%)"
-            : "radial-gradient(circle, rgba(99,102,241,0.14) 0%, transparent 70%)",
-        }}
-      />
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          bottom: "-60px", left: "5%",
-          width: 240, height: 240,
-          borderRadius: "50%",
-          background: isDark
-            ? "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)"
-            : "radial-gradient(circle, rgba(59,130,246,0.13) 0%, transparent 70%)",
-        }}
-      />
-      <div className="relative z-10 max-w-7xl mx-auto">
-
-        {/* Heading */}
-        <motion.h2
-          variants={sectionVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          className="text-4xl font-bold text-foreground text-center mb-12"
-        >
-          <span className="squiggle-underline font-display">About Me</span>
-        </motion.h2>
-
-        {/* Two-column layout */}
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-[0.8fr_1.2fr] gap-12 lg:gap-16 items-center">
+        {/* Photo with offset gradient card */}
         <motion.div
-          variants={sectionVariants}
+          variants={reveal}
           initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          className="flex flex-col lg:flex-row gap-10 items-start"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          className="flex justify-center lg:justify-start"
         >
-          {/* ── Left: profile photo ── */}
-          <div className="flex-shrink-0 flex justify-center lg:justify-start">
-            <motion.div
-              className="relative w-64 aspect-[4/5] overflow-hidden border-4 border-blue-500/30 shadow-[0_0_40px_rgba(59,130,246,0.15)] animate-blob"
-              whileHover={{ rotate: 2, scale: 1.03 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            >
+          <div className="relative w-full max-w-[320px]">
+            <div className="absolute inset-0 translate-x-4 translate-y-4 rounded-[22px] bg-gradient-to-br from-accent-blue to-accent-violet" />
+            <div className="relative rounded-[22px] overflow-hidden border border-ink/10 bg-white">
               <Image
                 src="/headshot.jpg"
                 alt="Ashim Shrestha"
                 width={400}
-                height={500}
-                className="w-full h-full object-cover"
-                sizes="256px"
+                height={460}
+                className="w-full h-auto object-cover"
+                sizes="320px"
                 priority
               />
-            </motion.div>
+            </div>
           </div>
+        </motion.div>
 
-          {/* ── Right: bio ── */}
-          <div className="space-y-4 text-foreground/80 leading-relaxed text-base">
+        {/* Copy */}
+        <motion.div
+          variants={reveal}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <p className="font-mono text-[12px] uppercase tracking-[0.12em] text-accent-coral mb-4">
+            // About Me
+          </p>
+          <h2
+            className="font-display font-bold tracking-[-0.02em] text-ink leading-[1.05] mb-6"
+            style={{ fontSize: "clamp(32px, 4.5vw, 56px)" }}
+          >
+            Data rigor meets business strategy.
+          </h2>
+
+          <div className="space-y-5 text-[16px] leading-[1.6] text-ink/70 max-w-2xl">
             <p>
-              I&apos;m a growth and customer analytics professional with 8+ years of experience
-              helping businesses understand their customers, improve retention, and make
-              smarter acquisition decisions.
+              I&apos;m a growth and customer analytics professional with 8+ years of
+              experience helping businesses understand their customers, improve
+              retention, and make smarter acquisition decisions.
             </p>
             <p>
-              Across fintech, e-commerce, and marketing, I&apos;ve built the analytics that power
-              growth. From customer segmentation models that reduced churn by 50% to
-              experimentation frameworks that lifted conversion rates by 18% and cut customer
-              acquisition costs by 12%. At Daraz, I led analytics for a marketplace platform
-              serving 50+ stakeholders.
+              Across fintech, e-commerce, and marketing, I&apos;ve built the analytics
+              that power growth — from segmentation models that reduced churn by{" "}
+              <strong className="font-semibold text-accent-emerald">50%</strong> to
+              experimentation frameworks that lifted conversion{" "}
+              <strong className="font-semibold text-accent-coral">18%</strong> and cut
+              customer acquisition costs{" "}
+              <strong className="font-semibold text-accent-blue">12%</strong>. At Daraz,
+              I led analytics for a marketplace platform serving 50+ stakeholders.
             </p>
             <p>
-              I currently lead projects translating complex business questions into actionable
-              insights for product, marketing, and credit teams.
-            </p>
-            <p>
-              My work sits at the intersection of data rigor and business strategy. I&apos;m
-              equally comfortable running a cohort retention analysis, designing an A/B test,
-              or presenting findings to senior leadership.
+              My work sits at the intersection of data rigor and business strategy.
+              I&apos;m equally comfortable running a cohort retention analysis, designing
+              an A/B test, or presenting findings to senior leadership.
             </p>
           </div>
         </motion.div>

@@ -13,16 +13,29 @@ const config: Config = {
         background: "rgb(var(--background) / <alpha-value>)",
         secondary: "rgb(var(--secondary) / <alpha-value>)",
         card: "rgb(var(--card) / <alpha-value>)",
-        accent: "rgb(var(--accent) / <alpha-value>)",
         "accent-hover": "rgb(var(--accent-hover) / <alpha-value>)",
         foreground: "rgb(var(--foreground) / <alpha-value>)",
         muted: "rgb(var(--muted) / <alpha-value>)",
         border: "rgb(var(--border) / <alpha-value>)",
+        // Homepage redesign palette. `accent.DEFAULT` preserves the legacy
+        // `bg-accent`/`text-accent` used by the /resume route; the named
+        // accents (accent-blue, accent-coral, …) are the new design system.
+        accent: {
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          blue: "#2f6bff",
+          violet: "#7c4dff",
+          coral: "#ff5b3a",
+          emerald: "#12b981",
+          amber: "#ffb020",
+        },
+        paper: "#f7f4ee",
+        ink: "#16151d",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "monospace"],
         display: ["var(--font-display)", "system-ui", "sans-serif"],
+        body: ["var(--font-body)", "system-ui", "sans-serif"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
