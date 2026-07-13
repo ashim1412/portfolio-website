@@ -133,7 +133,7 @@ export function Projects() {
               className="font-display font-bold tracking-[-0.02em] text-ink"
               style={{ fontSize: "clamp(32px, 4.5vw, 56px)" }}
             >
-              Data-driven solutions
+              Portfolio
             </h2>
           </div>
           <a

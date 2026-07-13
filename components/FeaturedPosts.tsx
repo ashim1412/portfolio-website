@@ -17,7 +17,7 @@ export function FeaturedPosts({ posts }: { posts: PostSummary[] }) {
               className="font-display font-bold tracking-[-0.02em] text-ink leading-[1.05]"
               style={{ fontSize: "clamp(32px, 4.5vw, 56px)" }}
             >
-              Notes on growth and analytics.
+              Featured write-ups
             </h2>
           </div>
           <Link
