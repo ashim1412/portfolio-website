@@ -1,293 +1,306 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowDown, Github, Download } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useEffect, useState, useMemo } from "react";
+import { personalInfo } from "@/data/portfolio";
 
-const ROLES = [
-  "Data Analyst & Growth Analytics Professional",
-  "Turning Numbers Into Decisions 📊",
-  "Cohorts, Funnels & A/B Tests 🧪",
-  "Dashboard Whisperer ✨",
-];
-
-const FLOATING_EMOJI = [
-  { emoji: "📈", x: "12%", y: "22%", size: 34, delay: 0 },
-  { emoji: "🔍", x: "85%", y: "18%", size: 28, delay: 1.2 },
-  { emoji: "📊", x: "78%", y: "68%", size: 32, delay: 2.4 },
-  { emoji: "✨", x: "8%", y: "72%", size: 24, delay: 0.6 },
-];
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (delay: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, delay, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-};
-
-function StarField() {
-  const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
-
-  const stars = useMemo(
-    () =>
-      Array.from({ length: 120 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: Math.random() * 2.5 + 0.5,
-        duration: Math.random() * 5 + 3,
-        delay: Math.random() * 6,
-        opacity: Math.random() * 0.6 + 0.2,
-      })),
-    []
-  );
-
-  if (!mounted) return null;
-  const isDark = theme !== "light";
-
+// Highlighter-style phrase: a gradient filling only the bottom third of the
+// text, so it reads like a marker swipe. Wraps cleanly across line breaks.
+function Highlight({
+  children,
+  color,
+}: {
+  children: React.ReactNode;
+  color: string;
+}) {
   return (
-    <>
-      {stars.map((s) => (
-        <div
-          key={s.id}
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            left: `${s.x}%`,
-            top: `${s.y}%`,
-            width: s.size,
-            height: s.size,
-            background: isDark ? "white" : "rgba(15,23,42,0.7)",
-            animation: `twinkle ${s.duration}s ${s.delay}s ease-in-out infinite`,
-          }}
-        />
-      ))}
-    </>
+    <span
+      className="px-0.5"
+      style={{
+        backgroundImage: `linear-gradient(to top, ${color} 34%, transparent 34%)`,
+        boxDecorationBreak: "clone",
+        WebkitBoxDecorationBreak: "clone",
+      }}
+    >
+      {children}
+    </span>
   );
 }
 
-function FloatingEmoji() {
+// Each slide is a mini analytics widget for a real result from the About
+// section, color-matched to that section's stat callouts.
+type Slide = {
+  file: string;
+  stat: string;
+  label: string;
+  color: string;
+  viz: "churn" | "conversion" | "cac";
+};
+
+const SLIDES: Slide[] = [
+  { file: "churn_model.sql", stat: "−50%", label: "Customer churn rate", color: "#12b981", viz: "churn" },
+  { file: "ab_test.sql", stat: "+18%", label: "A/B test conversion lift", color: "#ff5b3a", viz: "conversion" },
+  { file: "acquisition.sql", stat: "−12%", label: "Customer acquisition cost", color: "#2f6bff", viz: "cac" },
+];
+
+// ── Per-slide visualizations ──
+function Viz({ kind, color }: { kind: Slide["viz"]; color: string }) {
+  if (kind === "churn") {
+    // Downward area chart — churn declining month over month.
+    return (
+      <svg viewBox="0 0 300 130" preserveAspectRatio="none" className="w-full h-[130px]">
+        <defs>
+          <linearGradient id="churnFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.35" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M0,32 L60,44 L120,58 L180,64 L240,78 L300,84 L300,130 L0,130 Z"
+          fill="url(#churnFill)"
+        />
+        <polyline
+          points="0,32 60,44 120,58 180,64 240,78 300,84"
+          fill="none"
+          stroke={color}
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+
+  if (kind === "conversion") {
+    // Control vs. variant comparison — variant wins.
+    const bars = [
+      { label: "Control", h: 60, muted: true },
+      { label: "Variant", h: 92, muted: false },
+    ];
+    return (
+      <div className="h-[130px] flex items-end justify-center gap-10 px-2">
+        {bars.map((b) => (
+          <div key={b.label} className="flex flex-col items-center gap-2 w-20 h-full justify-end">
+            <div
+              className="w-full rounded-t-[6px]"
+              style={{
+                height: `${b.h}%`,
+                backgroundColor: b.muted ? "rgba(247,244,238,0.15)" : color,
+              }}
+            />
+            <span className="font-mono text-[11px] text-paper/45">{b.label}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // cac: descending quarterly bars.
+  const bars = [100, 90, 82, 74];
   return (
-    <>
-      {FLOATING_EMOJI.map((item, i) => (
-        <motion.span
-          key={i}
-          className="absolute select-none pointer-events-none opacity-70"
-          style={{ left: item.x, top: item.y, fontSize: item.size }}
-          animate={{ y: [0, -18, 0], rotate: [0, 6, -6, 0] }}
-          transition={{
-            duration: 6 + i,
-            delay: item.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          {item.emoji}
-        </motion.span>
-      ))}
-    </>
+    <div>
+      <div className="h-[110px] flex items-end gap-3">
+        {bars.map((h, i) => (
+          <div
+            key={i}
+            className="flex-1 rounded-t-[5px]"
+            style={{ height: `${h}%`, backgroundColor: color, opacity: 1 - i * 0.14 }}
+          />
+        ))}
+      </div>
+      <div className="flex justify-between mt-2 font-mono text-[11px] text-paper/35 tracking-[0.04em]">
+        <span>Q1</span>
+        <span>Q2</span>
+        <span>Q3</span>
+        <span>Q4</span>
+      </div>
+    </div>
+  );
+}
+
+const slideVariants = {
+  enter: (dir: number) => ({ x: dir > 0 ? 48 : -48, opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (dir: number) => ({ x: dir > 0 ? -48 : 48, opacity: 0 }),
+};
+
+function DashboardCard() {
+  const [[index, dir], setState] = useState<[number, number]>([0, 1]);
+  const [paused, setPaused] = useState(false);
+
+  const paginate = (step: number) =>
+    setState(([i]) => [(i + step + SLIDES.length) % SLIDES.length, step]);
+  const goTo = (target: number) =>
+    setState(([i]) => [target, target >= i ? 1 : -1]);
+
+  // Auto-advance, paused on hover / drag.
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => paginate(1), 4500);
+    return () => clearInterval(id);
+  }, [paused, index]);
+
+  const slide = SLIDES[index];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 26 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: [0.2, 0.7, 0.2, 1], delay: 0.15 }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      className="relative rounded-[22px] bg-ink p-6 sm:p-7 text-paper shadow-[0_30px_60px_-30px_rgba(22,21,29,0.5)]"
+    >
+      <div className="relative min-h-[300px] overflow-hidden">
+        <AnimatePresence custom={dir} mode="wait">
+          <motion.div
+            key={index}
+            custom={dir}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.35, ease: [0.2, 0.7, 0.2, 1] }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragEnd={(_, info) => {
+              if (info.offset.x < -60) paginate(1);
+              else if (info.offset.x > 60) paginate(-1);
+            }}
+            className="cursor-grab active:cursor-grabbing"
+          >
+            {/* Window chrome */}
+            <div className="flex items-center gap-3 mb-7">
+              <div className="flex gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-accent-coral" />
+                <span className="w-3 h-3 rounded-full bg-accent-amber" />
+                <span className="w-3 h-3 rounded-full bg-accent-emerald" />
+              </div>
+              <span className="font-mono text-[12px] text-paper/45 tracking-[0.02em]">
+                {slide.file}
+              </span>
+            </div>
+
+            {/* Headline stat */}
+            <div className="mb-6">
+              <div
+                className="font-display font-bold text-[44px] leading-none tracking-[-0.03em]"
+                style={{ color: slide.color }}
+              >
+                {slide.stat}
+              </div>
+              <div className="font-mono text-[12px] uppercase tracking-[0.08em] text-paper/50 mt-2">
+                {slide.label}
+              </div>
+            </div>
+
+            {/* Visualization */}
+            <Viz kind={slide.viz} color={slide.color} />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Slide indicators */}
+      <div className="flex items-center gap-2 mt-6">
+        {SLIDES.map((s, i) => (
+          <button
+            key={s.file}
+            onClick={() => goTo(i)}
+            aria-label={`Show ${s.label}`}
+            className="h-1.5 rounded-full transition-all duration-300"
+            style={{
+              width: i === index ? 22 : 6,
+              backgroundColor: i === index ? s.color : "rgba(247,244,238,0.25)",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Floating experience chip */}
+      <motion.div
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 4, ease: "easeInOut", repeat: Infinity }}
+        className="absolute -top-4 -right-3 sm:-right-4 flex items-center gap-2 rounded-full bg-accent-amber px-4 py-2 shadow-[0_12px_24px_-8px_rgba(255,176,32,0.6)]"
+      >
+        <span className="font-mono text-[13px] font-semibold text-ink tracking-[0.02em]">
+          8+ yrs
+        </span>
+      </motion.div>
+    </motion.div>
   );
 }
 
 export function Hero() {
-  const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const [roleIndex, setRoleIndex] = useState(0);
-  useEffect(() => setMounted(true), []);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setRoleIndex((i) => (i + 1) % ROLES.length);
-    }, 3000);
-    return () => clearInterval(id);
-  }, []);
-
-  const isDark = !mounted || theme !== "light";
-
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
-      {/* Background */}
-      <div
-        className="absolute inset-0 animate-gradient-shift transition-all duration-700"
-        style={{
-          backgroundImage: isDark
-            ? "linear-gradient(135deg, #0c1a22 0%, #12222e 30%, #0e2f2a 60%, #14202e 100%)"
-            : "linear-gradient(135deg, #dbeafe 0%, #ede9fe 40%, #e0f2fe 70%, #f0f9ff 100%)",
-        }}
-      />
+    <section
+      id="top"
+      className="relative overflow-hidden px-5 sm:px-8 pt-28 pb-16 lg:pt-36 lg:pb-24"
+    >
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.15fr_0.85fr] gap-12 lg:gap-12 items-center">
+        {/* Left */}
+        <div>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-ink/12 bg-white mb-8">
+            <motion.span
+              className="w-2 h-2 rounded-full bg-accent-emerald"
+              animate={{ opacity: [1, 0.25, 1] }}
+              transition={{ duration: 1.8, ease: "easeInOut", repeat: Infinity }}
+            />
+            <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink/70">
+              Data Analyst · Growth Analytics
+            </span>
+          </div>
 
-      {/* Subtle overlay */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: isDark
-            ? "radial-gradient(ellipse at 50% 50%, rgba(0,212,170,0.16) 0%, transparent 70%)"
-            : "radial-gradient(ellipse at 50% 50%, rgba(99,102,241,0.10) 0%, transparent 70%)",
-        }}
-      />
+          {/* Headline */}
+          <h1
+            className="font-display font-bold leading-[0.92] tracking-[-0.035em] text-ink"
+            style={{ fontSize: "clamp(48px, 8vw, 104px)" }}
+          >
+            Ashim
+            <br />
+            <span className="text-accent-blue">Shrestha</span>
+            <span className="text-accent-coral">.</span>
+          </h1>
 
-      {/* Starry background */}
-      <StarField />
+          {/* Intro */}
+          <p className="mt-7 max-w-xl text-[17px] leading-[1.6] text-ink/70">
+            I help businesses grow by turning customer data into{" "}
+            <Highlight color="rgba(255,214,0,0.45)">smarter acquisition</Highlight>,{" "}
+            <Highlight color="rgba(18,185,129,0.35)">stronger retention</Highlight>, and{" "}
+            <Highlight color="rgba(255,91,58,0.32)">revenue-driving decisions</Highlight>{" "}
+            across fintech, e-commerce, and marketing.
+          </p>
 
-      {/* Floating data-themed emoji */}
-      <FloatingEmoji />
-
-      {/* Floating orbs */}
-      <motion.div
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          width: 400,
-          height: 400,
-          left: "10%",
-          top: "15%",
-          background: isDark
-            ? "radial-gradient(circle, rgba(0,212,170,0.16) 0%, transparent 70%)"
-            : "radial-gradient(circle, rgba(99,102,241,0.13) 0%, transparent 70%)",
-        }}
-        animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          width: 300,
-          height: 300,
-          right: "8%",
-          bottom: "20%",
-          background: isDark
-            ? "radial-gradient(circle, rgba(168,85,247,0.14) 0%, transparent 70%)"
-            : "radial-gradient(circle, rgba(59,130,246,0.11) 0%, transparent 70%)",
-        }}
-        animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.7, 0.4] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-      />
-
-      {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto text-center">
-        {/* Heading */}
-        <motion.h1
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.2}
-          className="text-6xl sm:text-7xl lg:text-8xl font-bold mb-8 tracking-tight leading-none"
-          style={{ color: isDark ? "#ffffff" : "#0f172a" }}
-        >
-          <span className="squiggle-underline font-display">Ashim Shrestha</span>
-        </motion.h1>
-
-        {/* Subtitle — cycles through a few playful role taglines */}
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.4}
-          className="h-10 sm:h-9 mb-5 flex items-center justify-center"
-        >
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={roleIndex}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="text-2xl sm:text-3xl font-light tracking-wide"
-              style={{ color: isDark ? "#00d4aa" : "#0d9488" }}
+          {/* Buttons */}
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <a
+              href="#projects"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-ink hover:bg-accent-coral text-paper font-mono text-[13px] uppercase tracking-[0.04em] transition-colors duration-200"
             >
-              {ROLES[roleIndex]}
-            </motion.p>
-          </AnimatePresence>
-        </motion.div>
+              View Projects <span aria-hidden>→</span>
+            </a>
+            <a
+              href={personalInfo.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-ink/15 hover:border-ink text-ink font-mono text-[13px] uppercase tracking-[0.04em] transition-colors duration-200"
+            >
+              GitHub
+            </a>
+            <a
+              href="/Ashim-Shrestha.pdf"
+              download="Ashim-Shrestha-Resume.pdf"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-ink/15 hover:border-ink text-ink font-mono text-[13px] uppercase tracking-[0.04em] transition-colors duration-200"
+            >
+              Download Resume
+            </a>
+          </div>
+        </div>
 
-        {/* Tagline */}
-        <motion.p
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.6}
-          className="text-lg max-w-xl mx-auto leading-relaxed mb-12"
-          style={{ color: isDark ? "rgba(255,255,255,0.50)" : "rgba(15,23,42,0.60)" }}
-        >
-          I help businesses grow by turning customer data into acquisition strategies,
-          retention improvements, and revenue-driving decisions across fintech,
-          e-commerce, and marketing.
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.8}
-          className="flex flex-wrap items-center justify-center gap-4"
-        >
-          <motion.a
-            href="#projects"
-            whileHover={{ scale: 1.06, rotate: -1 }}
-            whileTap={{ scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 400, damping: 12 }}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-accent hover:bg-accent-hover text-white font-semibold text-sm tracking-wide hover:shadow-lg hover:shadow-[rgba(0,212,170,0.3)]"
-          >
-            View Projects
-          </motion.a>
-
-          <motion.a
-            href="https://github.com/ashim1412"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.06, rotate: 1 }}
-            whileTap={{ scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 400, damping: 12 }}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-sm tracking-wide"
-            style={{
-              border: isDark ? "1px solid rgba(255,255,255,0.30)" : "1px solid rgba(15,23,42,0.25)",
-              color: isDark ? "white" : "#0f172a",
-            }}
-          >
-            <Github size={16} />
-            GitHub
-          </motion.a>
-
-          <motion.a
-            href="/Ashim-Shrestha.pdf"
-            download="Ashim-Shrestha-Resume.pdf"
-            whileHover={{ scale: 1.06, rotate: -1 }}
-            whileTap={{ scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 400, damping: 12 }}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold text-sm tracking-wide"
-            style={{
-              border: isDark ? "1px solid rgba(255,255,255,0.30)" : "1px solid rgba(15,23,42,0.25)",
-              color: isDark ? "white" : "#0f172a",
-            }}
-          >
-            <Download size={16} />
-            Download Resume
-          </motion.a>
-        </motion.div>
+        {/* Right */}
+        <DashboardCard />
       </div>
-
-      {/* Scroll indicator */}
-      <motion.a
-        href="#about"
-        aria-label="Scroll down"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 transition-colors"
-        style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(15,23,42,0.40)" }}
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <ArrowDown size={26} />
-        </motion.div>
-      </motion.a>
     </section>
   );
 }

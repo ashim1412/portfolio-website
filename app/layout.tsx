@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Fredoka } from "next/font/google";
+import { Inter, JetBrains_Mono, Space_Grotesk, Instrument_Sans } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { personalInfo } from "@/data/portfolio";
 
+// Kept for the /resume route, which still uses the previous font stack.
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -17,10 +18,18 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const fredoka = Fredoka({
+// Homepage redesign font system.
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   weight: ["500", "600", "700"],
   variable: "--font-display",
+  display: "swap",
+});
+
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-body",
   display: "swap",
 });
 
@@ -85,7 +94,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} ${fredoka.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${instrumentSans.variable}`}
       suppressHydrationWarning
     >
       <head>
