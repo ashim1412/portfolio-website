@@ -1,0 +1,34 @@
+---
+title: "Hello, World — Why I'm Starting This Blog"
+date: "2026-07-11"
+excerpt: "Kicking off a blog about growth analytics, experimentation, and the occasional messy SQL query."
+tags: ["Meta"]
+---
+
+I've spent the last 8+ years buried in cohort tables, funnel dashboards, and
+A/B test results — and surprisingly little of that ever gets written down
+anywhere permanent. This blog is where that changes.
+
+Expect posts on things like:
+
+- Cohort retention analysis, and where it quietly lies to you
+- Designing A/B tests that survive contact with a real product team
+- SQL patterns I reach for constantly (window functions, I'm looking at you)
+- Notes from building growth analytics at scale
+
+## Why now
+
+Mostly because writing things down is the fastest way I know to find the
+holes in my own thinking. If it's useful to someone else along the way,
+even better.
+
+```sql
+select
+  date_trunc('month', signup_at) as cohort_month,
+  count(*) as users
+from customers
+group by 1
+order by 1;
+```
+
+More soon.
