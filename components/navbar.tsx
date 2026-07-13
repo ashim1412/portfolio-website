@@ -28,7 +28,7 @@ export function Navbar() {
       <nav className="max-w-6xl mx-auto px-5 sm:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo mark */}
-          <a href="#" className="flex items-center gap-2.5 group">
+          <a href="/" className="flex items-center gap-2.5 group">
             <span className="w-5 h-5 rounded-[7px] bg-accent-coral transition-transform duration-200 group-hover:rotate-12" />
             <span className="font-display font-bold text-[22px] tracking-[-0.03em] text-ink">
               Ashim
