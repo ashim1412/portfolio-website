@@ -1,0 +1,35 @@
+---
+title: "Three Ways Cohort Retention Charts Lie to You"
+date: "2026-07-08"
+excerpt: "Retention curves look authoritative. They're also easy to misread — here's what to check before you trust one."
+tags: ["Retention", "Analytics"]
+---
+
+Retention curves are one of the most-trusted charts in growth analytics, and
+also one of the easiest to misread. A few things worth checking before you
+act on one:
+
+## 1. Cohort size drift
+
+If early cohorts are tiny and later ones are huge, your "blended" retention
+curve is really just describing your biggest cohort. Always check `n` per
+cohort, not just the percentage.
+
+## 2. Definition creep
+
+"Active" quietly changing from *logged in* to *completed a core action*
+somewhere between two dashboards will make retention look like it improved
+when nothing changed except the metric.
+
+## 3. Survivorship in the denominator
+
+```python
+# wrong: denominator shrinks as churned users are excluded upstream
+retention = returning_users / active_users_today
+
+# right: denominator is the original cohort size, fixed at cohort start
+retention = returning_users / cohort_size_at_day_0
+```
+
+None of this means retention curves are useless — just that they reward a
+little skepticism before you put them in a slide.
