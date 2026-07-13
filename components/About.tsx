@@ -64,13 +64,17 @@ export function About() {
             </p>
             <p>
               Across fintech, e-commerce, and marketing, I&apos;ve built the analytics
-              that power growth — from segmentation models that reduced churn by{" "}
+              that power growth. From customer segmentation models that reduced churn by{" "}
               <strong className="font-semibold text-accent-emerald">50%</strong> to
-              experimentation frameworks that lifted conversion{" "}
+              experimentation frameworks that lifted conversion rates by{" "}
               <strong className="font-semibold text-accent-coral">18%</strong> and cut
-              customer acquisition costs{" "}
+              customer acquisition costs by{" "}
               <strong className="font-semibold text-accent-blue">12%</strong>. At Daraz,
               I led analytics for a marketplace platform serving 50+ stakeholders.
+            </p>
+            <p>
+              I currently lead projects translating complex business questions into
+              actionable insights for product, marketing, and credit teams.
             </p>
             <p>
               My work sits at the intersection of data rigor and business strategy.
